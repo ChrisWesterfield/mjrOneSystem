@@ -1,0 +1,10 @@
+{% include 'configuration/ssl.base.twig' %}
+
+[ req_distinguished_name ]
+O  = mjrOne
+C  = DE
+CN = {{ name }}
+
+[ alternate_names ]
+DNS.1 = {{ name }}
+DNS.2 = *.{{ name }}

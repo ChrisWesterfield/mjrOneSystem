@@ -1,0 +1,29 @@
+[{{ name }}]
+{# user config #}
+user={{ user }}
+group={{ group }}
+{# listen config #}
+listen={{  listen }}
+listen.owner={{ user }}
+listen.group={{ group }}
+{# process manager config #}
+pm = {{ pm }}
+{% for id,value in pmc %}
+{{ id }}={{ value }}
+{% endfor %}
+{# standart config #}
+php_flag[display_errors] = {{ displayError }}
+php_flag[xdebug.remote_enable] = {{ xdebug }}
+php_admin_value[error_log] = {{ logPath }}/{{ name }}.fpm.log
+slowlog = {{ logPath }}/{{ name }}.fpmSlow.log
+php_admin_flag[log_errors] = {{ logErrors }}
+php_admin_value[memory_limit] = {{ maxRam }}
+catch_workers_output = yes
+{# Flags #}
+{% for id,value in flags %}
+php_flag[{{ id }}] = {{ value }}
+{% endfor %}
+{# Values #}
+{% for id,value in values %}
+php_admin_value[{{ id }}] = {{ value }}
+{% endfor %}

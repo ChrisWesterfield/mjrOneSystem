@@ -1,0 +1,59 @@
+server {
+    {% include "configuration/nginx/bits/port.conf.twig" %}
+    {% include "configuration/nginx/bits/ssl.conf.twig" %}
+
+    server_name {{ hostname }};
+    root {{ docRoot }};
+
+    index index.html index.htm index.php app_dev.php;
+
+    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+
+    location / {
+        try_files \$uri \$uri/ /app_dev.php?\$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    access_log off;
+    error_log  {{ logPath }}/{{ hostname }}.error.log error;
+
+    sendfile off;
+
+    client_max_body_size {% if is defined maxPost %}{{ maxPost }}{% else %}100{% endif %}M;
+
+    # DEV
+    location ~ ^/(app_dev|app_test|config)\.php(/|\$) {
+        fastcgi_split_path_info ^(.+\.php)(/.*)\$;
+        fastcgi_pass {{  listen }};
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+
+        {% include "configuration/nginx/bits/params.conf.twig" %}
+
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
+        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
+    }
+
+    # PROD
+        location ~ ^/app\.php(/|$) {
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        fastcgi_pass {{  listen }};
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+
+        {% include "configuration/nginx/bits/params.conf.twig" %}
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
+        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
+        internal;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    {% include "configuration/nginx/bits/zendServer.conf.twig" %}
+}

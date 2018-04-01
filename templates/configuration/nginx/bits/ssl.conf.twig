@@ -1,0 +1,6 @@
+{% if is defined portSSL %}
+    listen {{ portSSL }} ssl http2;
+
+    ssl_certificate     /etc/ssl/site/{{ hostname }}.crt;
+    ssl_certificate_key /etc/ssl/site/{{ hostname }}.key;
+{% endif %}

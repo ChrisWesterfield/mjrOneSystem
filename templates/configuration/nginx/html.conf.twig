@@ -1,0 +1,28 @@
+server {
+    {% include "configuration/nginx/bits/port.conf.twig" %}
+    {% include "configuration/nginx/bits/ssl.conf.twig" %}
+
+    server_name {{ hostname }};
+    root {{ docRoot }};
+
+    index index.html;
+
+    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    access_log off;
+    error_log  {{ logPath }}/{{ hostname }}.error.log error;
+
+    sendfile off;
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+}

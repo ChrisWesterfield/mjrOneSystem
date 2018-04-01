@@ -1,0 +1,20 @@
+server {
+    {% include "configuration/nginx/bits/port.conf.twig" %}
+    {% include "configuration/nginx/bits/ssl.conf.twig" %}
+    server_name {{ hostname }};
+
+    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+
+    location / {
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_http_version 1.1;
+        proxy_pass {{ listen }};
+    }
+
+    access_log off;
+    error_log  {{ logPath }}/{{ hostname }}.error.log error;
+}

@@ -1,0 +1,22 @@
+<VirtualHost *:{{ port }}>
+    ServerName {{ hostname }}
+    ServerAlias *.{{ hostname }}
+
+    DocumentRoot {{ docRoot }}
+    <Directory {{ docRoot }}>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Force Apache to pass the Authorization header to PHP:
+    # required for "basic_auth" under PHP-FPM and FastCGI
+    SetEnvIfNoCase ^Authorization\$ \"(.+)\" HTTP_AUTHORIZATION=\$1
+
+    # Using SetHandler avoids issues with using ProxyPassMatch in combination
+    # with mod_rewrite or mod_autoindex
+    <FilesMatch \.php$>
+        SetHandler \"proxy:{{  listen }}|fcgi://localhost\"
+    </FilesMatch>
+
+    ErrorLog {{ logPath }}/{{ hostname }}.error.log
+</VirtualHost>

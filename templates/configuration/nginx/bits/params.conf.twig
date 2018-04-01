@@ -1,0 +1,3 @@
+{% for id,element in params %}
+    fastcgi_param {{ id }} {{ element }};
+{% endfor %}
