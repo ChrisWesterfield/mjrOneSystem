@@ -20,6 +20,7 @@ class Mongo extends ProcessAbstract implements ProcessInterface
         'mongodb-org',
     ];
     public const VERSION_TAG = 'mongo';
+    public const BIN = '/usr/bin/mongo';
     public const BIND_IP = self::SUDO . ' ' . self::SED . ' -i "s/bindIp: .*/bindIp: 0.0.0.0/" /etc/mongod.conf';
     public const ENABLE = self::ENABLE_SERVICE . ' mongod';
     public const START = self::SERVICE_CMD . ' start mongod';

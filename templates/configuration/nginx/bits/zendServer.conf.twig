@@ -1,4 +1,4 @@
-{% if is defined zendServer and zendServer == true %}
+{% if zendServer is defined  and zendServer == true %}
     location /ZendServer {
         try_files \$uri \$uri/ /ZendServer/index.php?\$args;
     }

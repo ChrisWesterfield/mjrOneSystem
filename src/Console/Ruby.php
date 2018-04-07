@@ -19,7 +19,7 @@ class Ruby extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:ruby')
+        $this->setName('mjrone:package:ruby')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

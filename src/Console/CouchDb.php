@@ -11,14 +11,14 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class CouchDb extends BaseAbstract
 {
-    public const NAME = 'Darkstat';
+    public const NAME = 'CouchDB';
     public const SERVICE_CLASS = Process::class;
     /**
      *
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:couchdb')
+        $this->setName('mjrone:package:couchdb')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

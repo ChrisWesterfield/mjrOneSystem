@@ -18,7 +18,7 @@ class Jenkins extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:jenkins')
+        $this->setName('mjrone:package:jenkins')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

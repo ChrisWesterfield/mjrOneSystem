@@ -33,9 +33,9 @@ class Ssl extends ProcessAbstract implements ProcessInterface
         self::OPENSSL.' req -config "'.self::CA_CERT['CNF'].'" -key "'.self::CA_CERT['KEY'].'" -x509 -new -extensions v3_ca -days 3650 -sha256 -out "'.self::CA_CERT['CRT'].'" ',
     ];
     public const COMMANDS_CRT_GENERATE = [
-        self::SUDO.' '.self::OPENSSL.' genrsa -out "'.self::CERT['KEY'].'" 2048 2>/dev/null',
-        self::SUDO.' '.self::OPENSSL.' req -config "'.self::CERT['CNF'].'" -key "'.self::CERT['KEY'].'" -new -sha256 -out "'.self::CERT['CSR'].'"',
-        self::SUDO.' '.self::OPENSSL.' x509 -req -extfile "'.self::CERT['CNF'].'" -extensions server_cert -days 3650 -in "'.self::CERT['CSR'].'" -CA "'.self::CA_CERT['CRT'].'" -CAkey "'.self::CA_CERT['KEY'].'" -CAcreateserial -out "'.self::CERT['CRT'].'"'
+        'GENKEY'=>self::SUDO.' '.self::OPENSSL.' genrsa -out "'.self::CERT['KEY'].'" 2048 2>/dev/null',
+        'GENRSA'=>self::SUDO.' '.self::OPENSSL.' req -config "'.self::CERT['CNF'].'" -key "'.self::CERT['KEY'].'" -new -sha256 -out "'.self::CERT['CSR'].'"',
+        'GENCRT'=>self::SUDO.' '.self::OPENSSL.' x509 -req -extfile "'.self::CERT['CNF'].'" -extensions server_cert -days 3650 -in "'.self::CERT['CSR'].'" -CA "'.self::CA_CERT['CRT'].'" -CAkey "'.self::CA_CERT['KEY'].'" -CAcreateserial -out "'.self::CERT['CRT'].'"'
     ];
 
     /**
@@ -84,7 +84,7 @@ class Ssl extends ProcessAbstract implements ProcessInterface
                     'root_crt'=>self::CERT['CRT'],
                 ]
             );
-            file_put_contents(self::CA_CERT['CNF'], $rendered);
+            $this->execute('echo "'.$rendered.'" | '.self::SUDO.' '.self::TEE.' '.self::CA_CERT['CNF']);
             foreach(self::COMMANDS_CA_GENERATE as $cmd)
             {
                 $this->execute($cmd);
@@ -108,18 +108,38 @@ class Ssl extends ProcessAbstract implements ProcessInterface
             [
                 'hostname'=>$this->getConfig()->getName(),
                 'path_ssl'=>self::PATH_CA_DIR,
-                'root_key'=>self::CERT['KEY'],
-                'root_crt'=>self::CERT['CRT'],
+                'root_key'=>sprintf(self::CERT['KEY'], $crt),
+                'root_crt'=>sprintf(self::CERT['CRT'], $crt),
                 'name'=>$crt,
             ]
         );
         $this->execute(self::SUDO.' /bin/mkdir '.self::PATH_SSL_DIR.'/'.$crt);
-        file_put_contents(self::SUDO.' '.self::SH.' -c "echo \"'.$rendered.'\" > '.self::CERT['CNF'].'"', $rendered);
+        $this->execute('echo "'.$rendered.'" | '.self::SUDO.' '.self::TEE.' '.sprintf(self::CERT['CNF'], $crt));
         $this->getOutput()->writeln('Generating Certificate '.$crt);
-        foreach(self::COMMANDS_CRT_GENERATE as $command)
-        {
-            $this->execute($command);
-        }
+        $this->execute(
+            sprintf(
+                self::COMMANDS_CRT_GENERATE['GENKEY'],
+                $crt
+            )
+        );
+        $this->execute(
+            sprintf(
+                self::COMMANDS_CRT_GENERATE['GENRSA'],
+                $crt,
+                $crt,
+                $crt
+            )
+        );
+        $this->execute(
+            sprintf(
+                self::COMMANDS_CRT_GENERATE['GENCRT'],
+                $crt,
+                $crt,
+                $crt,
+                $crt,
+                $crt
+            )
+        );
         $this->getOutput()->writeln('done');
     }
 }

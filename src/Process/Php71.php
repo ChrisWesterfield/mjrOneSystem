@@ -54,7 +54,7 @@ class Php71 extends ProcessAbstract implements ProcessInterface
     {
         if(!file_exists(self::INSTALLED_APPS_STORE. self::VERSION_TAG))
         {
-            $this->progBarInit(80);
+            $this->progBarInit(90);
             $this->touch(self::INSTALLED_APPS_STORE, self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->checkRequirements(get_class($this), self::REQUIREMENTS);
@@ -73,6 +73,26 @@ class Php71 extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             $this->createLink(self::DIR_MODS_AVAILABLE.self::MJRONE_FILE,self::DIR_CONF_FPM.'20-'.self::MJRONE_FILE);
             $this->progBarAdv(5);
+            if(
+                $this->getConfig()->getFeatures()->contains(Maria::class)
+                ||
+                $this->getConfig()->getFeatures()->contains(MySQL56::class)
+                ||
+                $this->getConfig()->getFeatures()->contains(MySQL57::class)
+                ||
+                $this->getConfig()->getFeatures()->contains(MySQL8::class)
+            )
+            {
+                $this->execute(self::SUDO.' '.self::APT.' install php'.self::VERSION.'-mysql');
+                $this->progBarAdv(5);
+            }
+            if($this->getConfig()->getFeatures()->contains(PostgreSQL::class))
+            {
+                $this->execute(self::SUDO.' '.self::APT.' install php'.self::VERSION.'-pgsql');
+                $this->progBarAdv(5);
+            }
+            $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART);
+            $this->progBarAdv(5);
             $this->getConfig()->addFeature(get_class($this));
             $this->progBarFin();
         }
@@ -85,11 +105,29 @@ class Php71 extends ProcessAbstract implements ProcessInterface
     {
         if(file_exists(self::INSTALLED_APPS_STORE. self::VERSION_TAG))
         {
-            $this->progBarInit(50);
+            $this->progBarInit(65);
             $this->checkUninstall(get_class($this));
             $this->progBarAdv(5);
             $this->uninstallRequirement(get_class($this));
             $this->progBarAdv(5);
+            if(
+                $this->getConfig()->getFeatures()->contains(Maria::class)
+                ||
+                $this->getConfig()->getFeatures()->contains(MySQL56::class)
+                ||
+                $this->getConfig()->getFeatures()->contains(MySQL57::class)
+                ||
+                $this->getConfig()->getFeatures()->contains(MySQL8::class)
+            )
+            {
+                $this->execute(self::SUDO.' '.self::APT.' purge php'.self::VERSION.'-mysql');
+                $this->progBarAdv(5);
+            }
+            if($this->getConfig()->getFeatures()->contains(PostgreSQL::class))
+            {
+                $this->execute(self::SUDO.' '.self::APT.' purge php'.self::VERSION.'-pgsql');
+                $this->progBarAdv(5);
+            }
             $this->uninstallPackages(self::SOFTWARE);
             $this->progBarAdv(15);
             unlink(self::INSTALLED_APPS_STORE. self::VERSION_TAG);

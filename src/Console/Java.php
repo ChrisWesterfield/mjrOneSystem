@@ -12,7 +12,7 @@ class Java extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:java')
+        $this->setName('mjrone:package:java')
             ->setHelp('install or uninstall Java')
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'remove package completley');

@@ -62,7 +62,7 @@ class DbUser extends ConfigAbstract implements ConfigInterface
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPassword():?string
     {
         return $this->password;
     }
@@ -80,7 +80,7 @@ class DbUser extends ConfigAbstract implements ConfigInterface
     /**
      * @return bool|mixed
      */
-    public function getReadOnly()
+    public function getReadOnly():?bool
     {
         return $this->readOnly;
     }

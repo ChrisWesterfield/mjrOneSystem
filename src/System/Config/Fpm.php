@@ -10,10 +10,13 @@ namespace App\System\Config;
 class Fpm extends ConfigAbstract implements ConfigInterface
 {
     public const PM = [
-        'dynmic',
-        'static',
-        'ondemand',
+        self::DYNAMIC,
+        self::STATIC,
+        self::ONDEMAND,
     ];
+    public const DYNAMIC = 'dynamic';
+    public const STATIC = 'static';
+    public const ONDEMAND = 'ondemand';
     /**
      * @var string
      */
@@ -42,7 +45,7 @@ class Fpm extends ConfigAbstract implements ConfigInterface
     /**
      * @var int
      */
-    protected $minSpare=5;
+    protected $minSpare=2;
 
     /**
      * @var string
@@ -90,7 +93,7 @@ class Fpm extends ConfigAbstract implements ConfigInterface
     protected $processIdleTimeOut = '10s';
 
     /**
-     * @var int
+     * @var string
      */
     protected $maxRequests = 200;
 
@@ -103,6 +106,16 @@ class Fpm extends ConfigAbstract implements ConfigInterface
      * @var array
      */
     protected $values=[];
+
+    /**
+     * @var bool
+     */
+    protected $displayError=true;
+
+    /**
+     * @var bool
+     */
+    protected $logError=false;
 
     /**
      * Fpm constructor.
@@ -121,132 +134,6 @@ class Fpm extends ConfigAbstract implements ConfigInterface
         {
             $this->pm = 'dynamic';
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getFlags(): array
-    {
-        return $this->flags;
-    }
-
-    /**
-     * @param array $flags
-     * @return Fpm
-     */
-    public function setFlags(array $flags): Fpm
-    {
-        $this->flags = $flags;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getValues(): array
-    {
-        return $this->values;
-    }
-
-    /**
-     * @param array $values
-     * @return Fpm
-     */
-    public function setValues(array $values): Fpm
-    {
-        $this->values = $values;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxRequests(): int
-    {
-        return $this->maxRequests;
-    }
-
-    /**
-     * @param int $maxRequests
-     * @return Fpm
-     */
-    public function setMaxRequests(int $maxRequests): Fpm
-    {
-        $this->maxRequests = $maxRequests;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProcessIdleTimeOut(): string
-    {
-        return $this->processIdleTimeOut;
-    }
-
-    /**
-     * @param string $processIdleTimeOut
-     * @return Fpm
-     */
-    public function setProcessIdleTimeOut(string $processIdleTimeOut): Fpm
-    {
-        $this->processIdleTimeOut = $processIdleTimeOut;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxChildren(): int
-    {
-        return $this->maxChildren;
-    }
-
-    /**
-     * @param int $maxChildren
-     * @return Fpm
-     */
-    public function setMaxChildren(int $maxChildren): Fpm
-    {
-        $this->maxChildren = $maxChildren;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUser(): string
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param string $user
-     * @return Fpm
-     */
-    public function setUser(string $user): Fpm
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGroup(): string
-    {
-        return $this->group;
-    }
-
-    /**
-     * @param string $group
-     * @return Fpm
-     */
-    public function setGroup(string $group): Fpm
-    {
-        $this->group = $group;
-        return $this;
     }
 
     /**
@@ -300,6 +187,24 @@ class Fpm extends ConfigAbstract implements ConfigInterface
     public function setPm(string $pm): Fpm
     {
         $this->pm = $pm;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxChildren(): int
+    {
+        return $this->maxChildren;
+    }
+
+    /**
+     * @param int $maxChildren
+     * @return Fpm
+     */
+    public function setMaxChildren(int $maxChildren): Fpm
+    {
+        $this->maxChildren = $maxChildren;
         return $this;
     }
 
@@ -444,6 +349,150 @@ class Fpm extends ConfigAbstract implements ConfigInterface
     public function setPort(int $port): Fpm
     {
         $this->port = $port;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param string $user
+     * @return Fpm
+     */
+    public function setUser(string $user): Fpm
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGroup(): string
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param string $group
+     * @return Fpm
+     */
+    public function setGroup(string $group): Fpm
+    {
+        $this->group = $group;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessIdleTimeOut(): string
+    {
+        return $this->processIdleTimeOut;
+    }
+
+    /**
+     * @param string $processIdleTimeOut
+     * @return Fpm
+     */
+    public function setProcessIdleTimeOut(string $processIdleTimeOut): Fpm
+    {
+        $this->processIdleTimeOut = $processIdleTimeOut;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxRequests(): int
+    {
+        return $this->maxRequests;
+    }
+
+    /**
+     * @param int $maxRequests
+     * @return Fpm
+     */
+    public function setMaxRequests(int $maxRequests): Fpm
+    {
+        $this->maxRequests = $maxRequests;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFlags(): array
+    {
+        return $this->flags;
+    }
+
+    /**
+     * @param array $flags
+     * @return Fpm
+     */
+    public function setFlags(array $flags): Fpm
+    {
+        $this->flags = $flags;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getValues(): array
+    {
+        return $this->values;
+    }
+
+    /**
+     * @param array $values
+     * @return Fpm
+     */
+    public function setValues(array $values): Fpm
+    {
+        $this->values = $values;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayError(): bool
+    {
+        return $this->displayError;
+    }
+
+    /**
+     * @param bool $displayError
+     * @return Fpm
+     */
+    public function setDisplayError(bool $displayError): Fpm
+    {
+        $this->displayError = $displayError;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLogError(): bool
+    {
+        return $this->logError;
+    }
+
+    /**
+     * @param bool $logError
+     * @return Fpm
+     */
+    public function setLogError(bool $logError): Fpm
+    {
+        $this->logError = $logError;
         return $this;
     }
 }

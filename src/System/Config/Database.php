@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\System\Config;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class Database
@@ -14,7 +15,7 @@ class Database extends ConfigAbstract implements ConfigInterface
      */
     protected $name;
     /**
-     * @var array
+     * @var ArrayCollection
      */
     protected $userList;
     /**
@@ -33,14 +34,14 @@ class Database extends ConfigAbstract implements ConfigInterface
         {
             $this->type = $config['type'];
         }
-        $this->userList = [];
-        if(array_key_exists('users',$config))
+        $this->userList = new ArrayCollection();
+        if(array_key_exists('userList',$config))
         {
-            if(empty($config['users']))
+            if(!empty($config['userList']))
             {
-                foreach($config['users'] as $user)
+                foreach($config['userList'] as $user)
                 {
-                    $this->userList[] = new DbUser($user);
+                    $this->userList->add(new DbUser($user));
                 }
             }
         }
@@ -65,18 +66,18 @@ class Database extends ConfigAbstract implements ConfigInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getUserList(): array
+    public function getUserList(): ArrayCollection
     {
         return $this->userList;
     }
 
     /**
-     * @param array $userList
+     * @param ArrayCollection $userList
      * @return Database
      */
-    public function setUserList(array $userList): Database
+    public function setUserList(ArrayCollection $userList): Database
     {
         $this->userList = $userList;
         return $this;

@@ -14,8 +14,10 @@ use App\Process\Sites\SilverStripe;
 use App\Process\Sites\SiteBaseAbstract;
 use App\Process\Sites\Statsd;
 use App\Process\Sites\Symfony2;
+use App\Process\Sites\Symfony4;
 use App\Process\Sites\Xhgui;
 use App\System\Config\Site;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class WebSitesNginx
@@ -25,18 +27,18 @@ use App\System\Config\Site;
 class WebSitesNginx extends ProcessAbstract implements ProcessInterface
 {
     public const NGINX = [
-        'elgg'=>Elgg::class,
-        'errbit'=> Errbit::class,
-        'html'=>Html::class,
-        'laravel'=>Laravel::class,
-        'phpApp'=>PhpApp::class,
-        'phpMyAdmin'=>PhpMyAdmin::class,
-        'proxy'=>Proxy::class,
-        'silverstripe'=>SilverStripe::class,
-        'statsd'=> Statsd::class,
-        'symfony2'=>Symfony2::class,
-        'symfony4'=>Symfony2::class,
-        'xhgui'=> Xhgui::class,
+        'Elgg'=>Elgg::class,
+        'Errbit'=> Errbit::class,
+        'Html'=>Html::class,
+        'Laravel'=>Laravel::class,
+        'PhpApp'=>PhpApp::class,
+        'PhpMyAdmin'=>PhpMyAdmin::class,
+        'Proxy'=>Proxy::class,
+        'Silverstripe'=>SilverStripe::class,
+        'Statsd'=> Statsd::class,
+        'Symfony2'=>Symfony2::class,
+        'Symfony4'=>Symfony4::class,
+        'Xhgui'=> Xhgui::class,
     ];
 
     /**
@@ -58,9 +60,9 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        /** @var Site[] $sites */
+        /** @var ArrayCollection|Site[] $sites */
         $sites = $this->getConfig()->getSites();
-        if(!empty($sites))
+        if($sites->count() > 0)
         {
             foreach($sites as $site)
             {
@@ -88,5 +90,6 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
                 }
             }
         }
+        $this->execute(self::SERVICE_CMD.' '.Nginx::SERVICE_NAME.' '.self::SERVICE_RESTART);
     }
 }

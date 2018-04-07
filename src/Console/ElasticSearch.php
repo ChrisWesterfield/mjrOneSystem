@@ -25,7 +25,7 @@ class ElasticSearch extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:elastic')
+        $this->setName('mjrone:package:elastic')
             ->setHelp('install or uninstall Elastic Search 5 or 6')
             ->setDescription('install or uninstall Elastic Search 5 or 6')
             ->addOption('elasticVersion', 'i', InputOption::VALUE_REQUIRED, 'Which Version to Install (currently only 5 or 6!)',6)

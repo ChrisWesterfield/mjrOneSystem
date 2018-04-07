@@ -117,6 +117,11 @@ class SystemConfig
     protected $blackFire;
 
     /**
+     * @var int
+     */
+    protected $slaveCount=0;
+
+    /**
      * SystemConfig constructor.
      */
     protected function __construct()
@@ -144,22 +149,26 @@ class SystemConfig
         $this->sites = new ArrayCollection();
         $this->features = new ArrayCollection();
         $this->authorize = $config['authorize'];
+        $this->slaveCount = (array_key_exists('slaveCount',$config)?$config['slaveCount']:0);
         if(array_key_exists('blackfire', $config))
         {
             $this->blackFire = new Blackfire($config['blackfire']);
         }
-        if(array_key_exists('databases',$config))
+        if(array_key_exists('databases',$config) && is_array($config['databases']))
         {
             if(!empty($config['databases']))
             {
                 foreach($config['databases'] as $database)
                 {
-                    $db = new Database($database);
-                    $this->databases->set($db->getName(), $db);
+                    if(is_array($database))
+                    {
+                        $db = new Database($database);
+                        $this->databases->set($db->getType().'.'.$db->getName(), $db);
+                    }
                 }
             }
         }
-        if(array_key_exists('features', $config))
+        if(array_key_exists('features', $config) && is_array($config['features']))
         {
             if(!empty($config['features']))
             {
@@ -167,25 +176,31 @@ class SystemConfig
                 $this->features->add($feature);
             }
         }
-        if(array_key_exists('fpm', $config))
+        if(array_key_exists('fpm', $config) && is_array($config['fpm']))
         {
             if(!empty($config['fpm']))
             {
                 foreach($config['fpm'] as $fpm)
                 {
-                    $proc = new Fpm($fpm);
-                    $this->fpm->set($proc->getName(),$proc);
+                    if(is_array($database))
+                    {
+                        $proc = new Fpm($fpm);
+                        $this->fpm->set($proc->getName(),$proc);
+                    }
                 }
             }
         }
-        if(array_key_exists('sites', $config))
+        if(array_key_exists('sites', $config) && is_array($config['sites']))
         {
             if(!empty($config['sites']))
             {
                 foreach($config['sites'] as $site)
                 {
-                    $s = new Site($site);
-                    $this->sites->set($s->getMap(),$s);
+                    if(is_array($database))
+                    {
+                        $s = new Site($site);
+                        $this->sites->set($s->getMap(),$s);
+                    }
                 }
             }
         }
@@ -195,12 +210,12 @@ class SystemConfig
             if($folder->getSystemType()==='vagrant')
             {
                 $this->vagrantDir = $folder->getTo();
-                $this->logDir = $this->vagrantDir.'/logs';
+                $this->logDir = $this->vagrantDir.'/log';
                 $this->systemDir = $this->vagrantDir.'/system';
             }
         }
         $this->requirements = new ArrayCollection();
-        if(array_key_exists('requirements', $config))
+        if(array_key_exists('requirements', $config) && is_array($config['requirements']))
         {
             if(!empty($config['requirements']))
             {
@@ -572,6 +587,24 @@ class SystemConfig
     public function setFeatures(ArrayCollection $features): SystemConfig
     {
         $this->features = $features;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSlaveCount(): int
+    {
+        return $this->slaveCount;
+    }
+
+    /**
+     * @param int $slaveCount
+     * @return SystemConfig
+     */
+    public function setSlaveCount(int $slaveCount): SystemConfig
+    {
+        $this->slaveCount = $slaveCount;
         return $this;
     }
 }

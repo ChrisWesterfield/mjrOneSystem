@@ -17,7 +17,7 @@ class FlyWay extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:flyway')
+        $this->setName('mjrone:package:flyway')
             ->setHelp('install or uninstall FlyWay')
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

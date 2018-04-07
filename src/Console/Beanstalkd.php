@@ -21,7 +21,7 @@ class Beanstalkd extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:beanstalkd')
+        $this->setName('mjrone:package:beanstalkd')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'remove package completley');

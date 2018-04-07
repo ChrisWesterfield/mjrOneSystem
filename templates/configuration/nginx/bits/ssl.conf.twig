@@ -1,6 +1,6 @@
-{% if is defined portSSL %}
+{% if portSSL is defined and portSSL > 0 %}
     listen {{ portSSL }} ssl http2;
 
-    ssl_certificate     /etc/ssl/site/{{ hostname }}.crt;
-    ssl_certificate_key /etc/ssl/site/{{ hostname }}.key;
+    ssl_certificate     /etc/ssl/private/{{ hostname }}/vagrant.crt;
+    ssl_certificate_key /etc/ssl/private/{{ hostname }}/vagrant.key;
 {% endif %}

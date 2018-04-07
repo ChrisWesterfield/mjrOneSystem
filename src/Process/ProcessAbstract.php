@@ -136,6 +136,7 @@ abstract class ProcessAbstract
         {
             $this->printOutput('<comment>'.$resp.'</comment>', 3);
         }
+        return $response;
     }
 
     /**
@@ -209,6 +210,7 @@ abstract class ProcessAbstract
      */
     public function progBarInit(int $maxValue = 100):void
     {
+        $maxValue/=5;
         $this->pb = $this->getIo()->createProgressBar($maxValue);
         $this->pb->setFormat('normal');
     }
@@ -218,6 +220,7 @@ abstract class ProcessAbstract
      */
     public function progBarAdv(int $steps=1):void
     {
+        $steps/=5;
         if($this->pb instanceof ProgressBar)
         {
             $this->pb->advance($steps);

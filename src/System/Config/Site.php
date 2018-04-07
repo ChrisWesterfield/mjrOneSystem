@@ -63,12 +63,12 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @var int|null
      */
-    protected $clientMaxBodySize;
+    protected $clientMaxBodySize=16;
 
     /**
      * @var int
      */
-    protected $proxyApp=81;
+    protected $proxyApp;
 
     /**
      * @var string|null
@@ -391,7 +391,7 @@ class Site extends ConfigAbstract implements ConfigInterface
      */
     public function getDescription(): string
     {
-        return $this->description;
+        return (string)$this->description;
     }
 
     /**
@@ -425,7 +425,7 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @return string
      */
-    public function getFpm(): string
+    public function getFpm():?string
     {
         return $this->fpm;
     }

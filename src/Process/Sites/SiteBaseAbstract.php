@@ -5,6 +5,9 @@ namespace App\Process\Sites;
 
 use App\Process\ProcessAbstract;
 use App\Process\ProcessInterface;
+use App\Process\Statsd as StatsdSite;
+use App\Process\Errbit as ErrbitSite;
+use App\System\Config\Fpm;
 use App\System\Config\Site;
 
 /**
@@ -57,13 +60,84 @@ abstract class SiteBaseAbstract extends ProcessAbstract implements ProcessInterf
     abstract public function configure(): void;
 
     /**
+     * @param string $file
+     * @param string $template
+     * @return bool
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    protected function getNginx(string $file, string $template)
+    {
+        $access = false;
+        /** @var Site $site */
+        $site = $this->getConfigSet();
+        $vars = [
+            'docRoot' => $site->getTo(),
+            'hostname'=>$site->getMap(),
+            'logPath'=>$this->getConfig()->getLogDir(),
+            'charSet'=>$site->getCharSet(),
+            'params'=>$site->getFcgiParams(),
+            'zendServer'=>$site->isZray(),
+            'maxPost'=>$site->getClientMaxBodySize(),
+            'fcgiBufferSize'=>$site->getFcgiBufferSize(),
+            'fcgiBuffer'=>$site->getFcgiBuffer(),
+            'fcgiBusyBufferSize'=>$site->getFcgiBusyBufferSize(),
+            'fcgiConnectionTimeOut'=>$site->getFcgiConnectionTimeOut(),
+            'fcgiSendTimeOut'=>$site->getFcgiSendTimeOut(),
+            'fcgiReadTimeOut'=>$site->getFcgiReadTimeOut(),
+        ];
+        if($site->getHttp()!==null)
+        {
+            $vars['port'] = $site->getHttp();
+            $access = true;
+        }
+        if($site->getHttps()!==null)
+        {
+            $vars['portSSL'] = $site->getHttps();
+            $access = true;
+        }
+        if(!$access)
+        {
+            return false;
+        }
+        $fpm = $site->getFpm();
+        if(!empty($fpm) && $this->getConfig()->getFpm()->containsKey($fpm))
+        {
+            /** @var Fpm $fpmd */
+            $fpmd = $this->getConfig()->getFpm()->get($fpm);
+            if($fpmd->getPort() > 0)
+            {
+                $vars['listen'] = $fpmd->getListen().':'.$fpmd->getPort();
+            }
+            else
+            {
+                $vars['listen'] = 'unix:'.$fpmd->getListen();
+            }
+        }
+        if(get_class($this)===Statsd::class)
+        {
+            $vars['grafanaSrc'] = StatsdSite::GRAPHITE_WEB;
+        }
+        if(get_class($this)===Errbit::class)
+        {
+            $vars['runDir'] = ErrbitSite::HOME.'/run';
+        }
+        $this->render($file, $template, $vars);
+        return true;
+    }
+
+    /**
      * @param $file
      * @param $template
      * @param $variables
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function render($file, $template, $variables):void
     {
         $rendered = $this->getContainer()->get('twig')->render($template, $variables);
-        @file_put_contents(self::SITES_AVAILABLE.$file, $rendered);
+        $this->execute('echo "'.$rendered.'" | '.self::SUDO.' '.self::TEE.' '.$file);
     }
 }

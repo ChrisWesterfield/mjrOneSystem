@@ -24,7 +24,7 @@ class Composer extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:composer')
+        $this->setName('mjrone:package:composer')
             ->setHelp('install or uninstall Composer')
             ->setDescription('install or uninstall Composer')
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley')

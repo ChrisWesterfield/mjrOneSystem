@@ -19,7 +19,7 @@ class PhpFpm56 extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:php56')
+        $this->setName('mjrone:package:php56')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

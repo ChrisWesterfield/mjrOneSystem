@@ -19,7 +19,7 @@ class Hhvm extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:hhvm')
+        $this->setName('mjrone:package:hhvm')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

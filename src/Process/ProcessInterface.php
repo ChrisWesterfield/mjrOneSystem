@@ -34,7 +34,8 @@ interface ProcessInterface
     public const SERVICE_RESTART = 'restart';
     public const SERVICE_STOP = 'stop';
     public const SERVICE_START = 'start';
-    public const LINK = '/bin/ln -sfn %s %s';
+    public const LN = '/bin/ln';
+    public const LINK = self::LN.' -sfn %s %s';
     public const GIT = '/usr/bin/git';
     public const GIT_CLONE = self::GIT . ' clone ';
     public const GEM = '/usr/bin/gem';
@@ -51,6 +52,15 @@ interface ProcessInterface
     public const MV = '/bin/mv';
     public const RM = '/bin/rm';
     public const DPKG = '/usr/bin/dpkg';
+    public const BASH = '/bin/bash';
+    public const NPM = '/usr/bin/npm';
+    public const MKDIR = '/bin/mkdir';
+    public const APT_KEY = '/usr/bin/apt-key';
+    public const VAGRANT_HOME = '/home/vagrant/base';
+    public const VAGRANT_ETC = self::VAGRANT_HOME.'/etc';
+    public const VAGRANT_BIN = self::VAGRANT_HOME.'/bin';
+    public const SUPERVISOR_D = self::VAGRANT_ETC.'/supervisor';
+    public const UPD_ALT = '/usr/sbin/update-alternatives';
 
     /**
      * @param SystemConfig $config

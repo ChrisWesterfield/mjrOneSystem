@@ -23,7 +23,7 @@ class Blackfire extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:blackfire')
+        $this->setName('mjrone:package:blackfire')
             ->setHelp('install or uninstall Blackfire')
             ->setDescription('install or uninstall Blackfire')
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley')

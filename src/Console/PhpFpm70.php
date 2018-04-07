@@ -19,7 +19,7 @@ class PhpFpm70 extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:php70')
+        $this->setName('mjrone:package:php70')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

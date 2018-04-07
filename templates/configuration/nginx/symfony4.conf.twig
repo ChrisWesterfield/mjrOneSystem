@@ -1,13 +1,13 @@
 server {
-    {% include "configuration/nginx/bits/port.conf.twig" %}
-    {% include "configuration/nginx/bits/ssl.conf.twig" %}
+{% include "configuration/nginx/bits/port.conf.twig" %}
+{% include "configuration/nginx/bits/ssl.conf.twig" %}
 
     server_name {{ hostname }};
     root {{ docRoot }};
 
     index index.html index.htm index.php;
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {{ charSet }};
 
     location / {
         try_files \$uri \$uri/ /index.php?\$query_string;
@@ -21,19 +21,19 @@ server {
 
     sendfile off;
 
-    client_max_body_size {% if is defined maxPost %}{{ maxPost }}{% else %}100{% endif %}M;
+    client_max_body_size {{ maxPost }}M;
 
     # DEV
     location ~ ^/index\.php(/|\$) {
         fastcgi_split_path_info ^(.+\.php)(/.*)\$;
         fastcgi_pass {{  listen }};
         include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param  SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         {% include "configuration/nginx/bits/params.conf.twig" %}
 
         fastcgi_intercept_errors off;
-        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
-        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
+        fastcgi_buffer_size {{ fcgiBufferSize }};
+        fastcgi_buffers {{ fcgiBuffer }};
     }
 
     location ~ /\.ht {
@@ -41,4 +41,5 @@ server {
     }
 
     {% include "configuration/nginx/bits/zendServer.conf.twig" %}
+
 }

@@ -17,7 +17,7 @@ class Munin extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:munin')
+        $this->setName('mjrone:package:munin')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

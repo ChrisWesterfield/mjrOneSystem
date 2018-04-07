@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace App\Console;
+use App\Process\Apache2;
+use App\Process\Nginx;
 use App\Process\WebSitesApache;
 use App\Process\WebSitesNginx;
 use App\System\SystemConfig;
@@ -17,11 +19,11 @@ class SiteConfig extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:configure:sites')
+        $this->setName('mjrone:sites:web')
             ->setHelp('generate Website Configs for apache and nginx')
             ->setDescription('generate Website Configs for apache and nginx')
             ->addOption('ignoreApache','a',InputOption::VALUE_NONE)
-            ->addOption('ignoreNginx','n', InputOption::VALUE_NONE);
+            ->addOption('ignoreNginx','x', InputOption::VALUE_NONE);
     }
 
     /**
@@ -31,7 +33,7 @@ class SiteConfig extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if(!$input->hasOption('ignoreApache'))
+        if($input->hasOption('ignoreApache') && $input->getOption('ignoreApache')!==true && SystemConfig::get()->getFeatures()->contains(Apache2::class))
         {
             $output->writeln('configuring apache');
             $inst = new WebSitesApache();
@@ -39,11 +41,11 @@ class SiteConfig extends ContainerAwareCommand
             $inst->setOutput($output);
             $inst->setIo(new SymfonyStyle($input, $output));
             $inst->setContainer($this->getContainer());
+            $inst->install();
             $inst->configure();
             $output->writeln('configuring apache done');
         }
-        $inst->getConfig()->writeConfigs();
-        if(!$input->hasOption('ignoreNginx'))
+        if($input->hasOption('ignoreNginx') && $input->getOption('ignoreNginx')!==true && SystemConfig::get()->getFeatures()->contains(Nginx::class))
         {
             $output->writeln('configuring nginx');
             $inst = new WebSitesNginx();
@@ -51,9 +53,9 @@ class SiteConfig extends ContainerAwareCommand
             $inst->setConfig(SystemConfig::get());
             $inst->setOutput($output);
             $inst->setContainer($this->getContainer());
+            $inst->install();
             $inst->configure();
             $output->writeln('configuring nginx done');
         }
-        $inst->getConfig()->writeConfigs();
     }
 }

@@ -17,7 +17,7 @@ class OhMyZsh extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:ohmyzsh')
+        $this->setName('mjrone:package:ohmyzsh')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

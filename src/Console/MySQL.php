@@ -30,7 +30,7 @@ class MySQL extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:mysql')
+        $this->setName('mjrone:package:mysql')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('mysql','m', InputOption::VALUE_REQUIRED,'set Version to Install (6 for 5.6, 7 for 5.7 or 8 for 8.x (experimental!))',7)
@@ -106,13 +106,13 @@ class MySQL extends ContainerAwareCommand
             $output->writeln('<error>MySQL 8.0 Installation detected!</error>');
             return 0;
         }
-        if($input->hasOption('mysql') && (int)$input->getOption('mysql')=== 5 )
+        if($input->hasOption('mysql') && (int)$input->getOption('mysql')=== 6 )
         {
             $inst = new MySQL56();
             $version = '5.6';
         }
         else
-            if(($input->hasOption('mysql') && (int)$input->getOption('mysql')=== 6) || !$input->hasOption('mysql') )
+            if(($input->hasOption('mysql') && (int)$input->getOption('mysql')=== 7) || !$input->hasOption('mysql') )
         {
             $inst = new MySQL57();
             $version = '5.7';

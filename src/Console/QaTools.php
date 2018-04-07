@@ -41,7 +41,7 @@ class QaTools extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:qatools')
+        $this->setName('mjrone:package:qatools')
             ->setHelp('install or uninstall QaTools')
             ->setDescription('install or uninstall QaTools')
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley')

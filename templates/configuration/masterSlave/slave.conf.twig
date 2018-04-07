@@ -1,0 +1,12 @@
+[mysqld{{ id }}]
+bind-address = {{ ip }}
+server_id={{ id }}
+port={{ port }}
+datadir=/var/lib/mysql/{{ id }}/
+socket=/var/lib/mysql/{{ id }}/mysql.sock
+pid-file=/var/run/mysqld/mysqld{{ id }}.pid
+log-error=/var/log/mysql/{{ id }}/mysqld.log
+#Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+log_bin = /var/log/mysql/{{ id }}/mysql-bin.log
+relay-log  = /var/log/mysql/{{ id }}/mysql-relay.log

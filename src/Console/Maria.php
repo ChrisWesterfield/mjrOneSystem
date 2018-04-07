@@ -29,7 +29,7 @@ class Maria extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:maria')
+        $this->setName('mjrone:package:maria')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');

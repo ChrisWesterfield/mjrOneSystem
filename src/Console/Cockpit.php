@@ -17,7 +17,7 @@ class Cockpit extends BaseAbstract
      */
     protected function configure()
     {
-        $this->setName('mjrone:install:cockpit')
+        $this->setName('mjrone:package:cockpit')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');
