@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package App\Console
  * @author chris westerfield <chris@mjr.one>
  */
-class AddNginxSite extends ContainerAwareCommand
+class AddSite extends ContainerAwareCommand
 {
     /**
      *
@@ -29,8 +29,8 @@ class AddNginxSite extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('mjrone:add:web')
-            ->setHelp('add or remove NginX Site')
-            ->setDescription('add or remove NginX Site')
+            ->setHelp('add or remove Site')
+            ->setDescription('add or remove Site')
             ->addArgument('map', InputArgument::REQUIRED, 'Url of the Website')
             ->addOption('type', null, InputOption::VALUE_REQUIRED, 'Type of Site (Example: Symfony4)', 'Symfony4')
             ->addOption('description', null, InputOption::VALUE_REQUIRED, 'Description')
@@ -49,6 +49,7 @@ class AddNginxSite extends ContainerAwareCommand
             ->addOption('fcgiSendTimeOut', null, InputOption::VALUE_REQUIRED, 'Fcgi Send Timeout', 300)
             ->addOption('fcgiReadTimeOut', null, InputOption::VALUE_REQUIRED, 'Fcgi Read Timeout', 300)
             ->addOption('fcgiBusyBufferSize', null, InputOption::VALUE_REQUIRED, 'Fcgi Read Timeout', '64k')
+            ->addOption('category', null, InputOption::VALUE_REQUIRED,'Category for Site', Site::CATEGORY_APP)
             ->addOption('remove', 'r', InputOption::VALUE_NONE, 'Remove Size');
     }
 
@@ -61,7 +62,17 @@ class AddNginxSite extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->hasOption('remove') && $input->getOption('remove') && SystemConfig::get()->getSites()->containsKey($input->getArgument('map'))) {
+            /** @var Site $site */
+            $site = SystemConfig::get()->getSites()->get($input->getArgument('map'));
             SystemConfig::get()->getSites()->remove($input->getArgument('map'));
+            $output->writeln('<info>Site '.$site->getMap().' was removed!</info>');
+            SystemConfig::get()->writeConfigs();
+            return;
+        }
+        if(!in_array($input->getOption('category'),Site::CATEGORIES))
+        {
+            $output->writeln('Category unknown. Only the Categories '.implode(',',Site::CATEGORIES).' are currently supported!');
+            return;
         }
         $options = $input->getOptions();
         unset(
