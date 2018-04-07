@@ -44,7 +44,6 @@ class BeanstalkedAdmin extends ProcessAbstract implements ProcessInterface
 );';
     public const VERSION_TAG = 'beanstalkdAdmin';
     public const FPM_IDENTITY = 'admin.beanstalkd';
-
     public const SUBDOMAIN = 'bsa.';
 
     /**

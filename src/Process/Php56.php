@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
-
-
 use App\System\Config\Fpm;
+use App\System\Config\Site;
 
 /**
  * Class Php56
@@ -45,8 +44,12 @@ class Php56 extends ProcessAbstract implements ProcessInterface
         'php'.self::VERSION.'-xsl',
         'php'.self::VERSION.'-fpm',
     ];
-    public const REQUIREMENTS = [];
+    public const REQUIREMENTS = [
+        Nginx::class,
+    ];
     public const VERSION_TAG = 'php56';
+    public const FPM_IDENTITY = 'admin.info56';
+    public const SUBDOMAIN = 'info56.';
 
     /**
      * @return void
@@ -140,6 +143,17 @@ class Php56 extends ProcessAbstract implements ProcessInterface
             unlink(self::DIR_MODS_AVAILABLE.self::MJRONE_FILE);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
+            if($this->getConfig()->getFpm()->containsKey(self::FPM_IDENTITY))
+            {
+                $listen = explode(':',$this->getConfig()->getFpm()->get(self::FPM_IDENTITY));
+                $port = (int)$listen[1];
+                $this->getConfig()->getUsedPorts()->removeElement($port);
+                $this->getConfig()->getFpm()->remove(self::FPM_IDENTITY);
+            }
             $this->progBarFin();
         }
     }
@@ -148,6 +162,9 @@ class Php56 extends ProcessAbstract implements ProcessInterface
      * @param $file
      * @param $template
      * @param $variables
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
     protected function render($file, $template, $variables):void
     {
@@ -160,54 +177,38 @@ class Php56 extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        if($this->getConfig()->getFpm()->count() > 0)
-        {
-            $this->progBarInit(($this>$this->getConfig()->getFpm()->count()*5));
-            foreach($this->getConfig()->getFpm() as $fpm)
-            {
-                /** @var Fpm $fpm */
-                if($fpm->getVersion() === self::VERSION)
-                {
-                    $vars = [
-                        'name'=>$fpm->getName(),
-                        'user'=>$fpm->getUser(),
-                        'group'=>$fpm->getGroup(),
-                        'pm'=>$fpm->getPm(),
-                        'xdebug'=>($fpm->isXdebug()?'yes':'no'),
-                        'logPath'=>$this->getConfig()->getLogDir(),
-                        'maxRam'=>$fpm->getMaxRam(),
-                        'flags'=>(!empty($fpm->getFlags())?$fpm->getFlags():[]),
-                        'values'=>(!empty($fpm->getValues())?$fpm->getValues():[]),
-                    ];
-                    switch ($fpm->getPm())
-                    {
-                        default:
-                        case 'dynamic':
-                            $vars['pmc'] = [
-                                'pm.max_children'=>$fpm->getMaxChildren(),
-                                'pm.start_servers'=>$fpm->getStart(),
-                                'pm.min_spare_servers'=>$fpm->getMinSpare(),
-                                'pm.max_spare_servers'=>$fpm->getMaxSpare(),
-                            ];
-                        break;
-                        case 'static':
-                            $vars['pmc'] = [
-                                'pm.start_servers'=>$fpm->getStart(),
-                            ];
-                        break;
-                        case 'ondemand':
-                            $vars['pmc'] = [
-                                'pm.max_children'=>$fpm->getMaxChildren(),
-                                'pm.process_idle_timeout'=>$fpm->getProcessIdleTimeOut(),
-                                'pm.max_requests'=>$fpm->getMaxRequests(),
-                            ];
-                        break;
-                    }
-                    $this->render($fpm->getName().'.conf','configure/php/fpm.conf.twig',$vars);
-                    $this->progBarAdv(5);
-                }
+        $port = 9001;
+        for ($i = 9001; $i < 20000; $i++) {
+            if (!$this->getConfig()->getUsedPorts()->contains($i)) {
+                $port = $i;
             }
-            $this->progBarFin();
         }
+        if ($i > 19999) {
+            $this->getOutput()->writeln('no available Ports left!');
+        }
+        $this->getConfig()->getUsedPorts()->add($i);
+        $fpm = new Fpm(
+            [
+                'name' => self::FPM_IDENTITY,
+                'user' => 'vagrant',
+                'group' => 'vagrant',
+                'listen' => '127.0.0.1:' . $i,
+                'pm' => Fpm::ONDEMAND,
+                'maxChildren' => 2,
+                'version' => self::VERSION,
+            ]
+        );
+        $this->getConfig()->getFpm()->set($fpm->getName(), $fpm);
+        $site = new Site(
+            [
+                'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
+                'type' => 'PhpApp',
+                'to' => self::VAGRANT_SYSTEM . '/public/' . self::VERSION,
+                'fpm' => $fpm->getName(),
+                'zRay' => false,
+                'category' => Site::CATEGORY_INFO,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(), $site);
     }
 }
