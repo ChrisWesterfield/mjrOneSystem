@@ -112,5 +112,6 @@ class AddSite extends ContainerAwareCommand
         }
         SystemConfig::get()->getSites()->set($site->getMap(), $site);
         SystemConfig::get()->writeConfigs();
+        $output->writeln('<comment>Webserver Configs need to be refreshed: mjrone:sites:web</comment>');
     }
 }

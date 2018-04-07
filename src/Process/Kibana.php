@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Site;
 
 /**
  * Class Kibana
@@ -21,6 +22,8 @@ class Kibana extends ProcessAbstract implements ProcessInterface
         self::ENABLE_SERVICE.' '.self::VERSION_TAG,
     ];
     public const VERSION_TAG = 'kibana';
+    public const SUBDOMAIN = 'kibana.';
+    public const DEFAULT_PORT = 5601;
     /**
      * @return void
      */
@@ -41,6 +44,7 @@ class Kibana extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(15);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -64,6 +68,11 @@ class Kibana extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN .$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN .$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -74,5 +83,14 @@ class Kibana extends ProcessAbstract implements ProcessInterface
     public function configure(): void
     {
         $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_START);
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

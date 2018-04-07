@@ -3,7 +3,7 @@ server {
     {% include "configuration/nginx/bits/ssl.conf.twig" %}
     server_name {{ hostname }};
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined %}{{ charSet }}{% else %}utf-8{% endif %};
 
     location / {
         proxy_set_header X-Real-IP \$remote_addr;

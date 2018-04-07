@@ -6,7 +6,7 @@ server {
 
     index index.html index.htm index.php app_dev.php;
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined %}{{ charSet }}{% else %}utf-8{% endif %};
 
     location /grafana/ {
         alias {{ grafanaSrc }};

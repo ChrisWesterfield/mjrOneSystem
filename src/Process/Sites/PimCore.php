@@ -15,7 +15,7 @@ class PimCore extends SiteBaseAbstract
      */
     public function configure(): void
     {
-        $this->getOutput()->writeln('<info>generating pimcore config for '.$this->getConfigSet()->getMap().'</info>');
+        $this->printOutput('<info>generating pimcore config for '.$this->getConfigSet()->getMap().'</info>',1);
         $vars = [
             'docRoot' => $this->getConfigSet()->getTo(),
             'hostname'=>$this->getConfigSet()->getMap(),
@@ -37,7 +37,7 @@ class PimCore extends SiteBaseAbstract
         {
             return;
         }
-        $outputFile = $this->getConfigSet()->getTo().'.conf';
+        $outputFile = $this->getConfigSet()->getMap().'.conf';
         $this->render($outputFile,'configuration/apache/apache.conf.twig',$vars);
         $this->createLink(self::SITES_AVAILABLE.$outputFile,self::SITES_ENABLED.'20.'.$outputFile);
 
@@ -47,6 +47,6 @@ class PimCore extends SiteBaseAbstract
         $proxy->setConfig($this->getConfig());
         $proxy->setConfigSet($this->getConfigSet());
         $proxy->configure();
-        $this->getOutput()->writeln('<info>pimcore config created</info>');
+        $this->printOutput('<info>pimcore config created</info>',1);
     }
 }

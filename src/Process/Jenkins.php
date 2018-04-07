@@ -6,6 +6,7 @@ use App\Process\QaTools\PhpCs;
 use App\Process\QaTools\PhpDox;
 use App\Process\QaTools\PhpLOC;
 use App\Process\QaTools\PhpUnit;
+use App\System\Config\Site;
 
 /**
  * Class Jenkins
@@ -26,6 +27,8 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
         Java::class,
     ];
     public const VERSION_TAG = 'jenkins';
+    public const SUBDOMAIN = 'jenkins.';
+    public const DEFAULT_PORT = 8080;
 
     /**
      *
@@ -47,6 +50,7 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
             $this->installPackages(self::SOFTWARE);
             $this->progBarAdv(20);
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -66,12 +70,25 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->remove(self::DEFAULT_PORT);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
 
     public function configure():void
     {
-
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_OTHER,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

@@ -23,6 +23,9 @@ class MailHog extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'mailhog';
     public const TMP_TARGET='/home/vagrant/mailhog';
+    public const SUBDOMAIN = 'mailhog.';
+    public const DEFAULT_PORT = 8025;
+    public const DEFAULT_PORT_SMTP = 1025;
 
     public const COMMANDS = [
         self::GIT_CLONE.' https://github.com/deogracia/MailHog-debian-package '.self::TMP_TARGET,
@@ -36,8 +39,8 @@ class MailHog extends ProcessAbstract implements ProcessInterface
         'cd '.self::TMP_TARGET.' && '.self::SUDO .' /usr/bin/dpkg-deb --build package',
         'cd '.self::TMP_TARGET.' && '.self::SUDO .' '.self::MV.' package.deb mailhog-VERSION-amd64.deb',
         'cd '.self::TMP_TARGET.' && '.self::SUDO .' dpkg -i mailhog-VERSION-amd64.deb ',
-        self::SUDO.' '.self::SED.' -i \'s/0.0.0.0:8025/127.0.0.1:8025/g\' /etc/default/mailhog',
-        self::SUDO.' '.self::SED.' -i \'s/0.0.0.0:1025/127.0.0.1:1025/g\' /etc/default/mailhog',
+        self::SUDO.' '.self::SED.' -i \'s/0.0.0.0:8025/127.0.0.1:'.self::DEFAULT_PORT.'/g\' /etc/default/mailhog',
+        self::SUDO.' '.self::SED.' -i \'s/0.0.0.0:1025/127.0.0.1:'.self::DEFAULT_PORT_SMTP.'/g\' /etc/default/mailhog',
         self::SUDO.' '.self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART,
     ];
 
@@ -61,6 +64,8 @@ class MailHog extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(10);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT_SMTP);
             $this->progBarFin();
         }
     }
@@ -80,12 +85,26 @@ class MailHog extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(30);
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT_SMTP);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
 
     public function configure():void
     {
-
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

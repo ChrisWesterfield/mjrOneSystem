@@ -12,6 +12,7 @@ class Netdata extends BaseAbstract
 {
     public const NAME = 'Netdata';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

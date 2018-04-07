@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Site;
 
 /**
  * Class Munin
@@ -15,8 +16,10 @@ class Munin extends ProcessAbstract implements ProcessInterface
         'munin-plugins-extra',
     ];
     public const MUNIN_CONFIG_FILE = '/etc/munin/munin.conf';
+    public const SUBDOMAIN = 'munin.';
+    public const HOME = self::VAGRANT_USER_DIR.'/munin';
     public const MUNIN_CONFIG_CONTENT = 'dbdir  /var/lib/munin
-htmldir /home/vagrant/munin
+htmldir '.self::HOME.'
 logdir /var/log/munin
 includedir /etc/munin/munin-conf.d
 graph_strategy cron
@@ -80,5 +83,14 @@ graph_strategy cron
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Html',
+                'to'=>self::HOME,
+                'category'=>Site::CATEGORY_STATISTICS,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

@@ -43,6 +43,7 @@ class WebSitesApache extends ProcessAbstract implements ProcessInterface
         $sites = $this->getConfig()->getSites();
         if(!empty($sites))
         {
+            $this->progBarInit(5);
             foreach($sites as $site)
             {
                 if(array_key_exists($site->getType(),self::APACHE))
@@ -57,6 +58,7 @@ class WebSitesApache extends ProcessAbstract implements ProcessInterface
                         $sslInstance->install();
                         $sslInstance->configure();
                         $sslInstance->generateCert($site->getMap());
+                        $this->progBarAdv(5);
                     }
                     $class = self::APACHE[$site->getType()];
                     /** @var SiteBaseAbstract $inst */
@@ -66,8 +68,10 @@ class WebSitesApache extends ProcessAbstract implements ProcessInterface
                     $inst->setConfigSet($site);
                     $inst->setContainer($this->getContainer());
                     $inst->configure();
+                    $this->progBarAdv(5);
                 }
             }
+            $this->progBarFin();
         }
     }
 }

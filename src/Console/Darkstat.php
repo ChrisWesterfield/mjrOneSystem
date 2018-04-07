@@ -13,6 +13,7 @@ class Darkstat extends BaseAbstract
 {
     public const NAME = 'Darkstat';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

@@ -32,6 +32,7 @@ class Maria extends ProcessAbstract implements ProcessInterface
     ];
     public const SERVICE_NAME = 'mysql';
     public const VERSION_TAG = 'maria';
+    public const DEFAULT_PORT = 3306;
 
     /**
      * @return void
@@ -77,6 +78,7 @@ class Maria extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -144,6 +146,7 @@ class Maria extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::RM.' -Rf /etc/mysql');
             $this->progBarAdv(5);
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->getConfig()->removeFeature(get_class($this));
             $this->progBarFin();
         }

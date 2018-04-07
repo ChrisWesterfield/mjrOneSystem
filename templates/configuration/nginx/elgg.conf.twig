@@ -29,7 +29,7 @@ server {
     image/svg+xml;
 
     # Max post size
-    client_max_body_size {% if is defined maxPost %}{{ maxPost }}{% else %}8{% endif %}M;
+    client_max_body_size {% if maxPost is defined  %}{{ maxPost }}{% else %}8{% endif %}M;
 
     location ~ /.well-known {
         allow all;

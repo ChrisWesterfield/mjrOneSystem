@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Site;
 
 /**
  * Class Zray
@@ -32,6 +33,9 @@ class CouchDb extends ProcessAbstract implements ProcessInterface
     /**
      * @return void
      */
+    public const SUBDOMAIN = 'couchdb.';
+    public const DEFAULT_PORT = 5984;
+
     public function install(): void
     {
         if(!file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG))
@@ -54,6 +58,7 @@ class CouchDb extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -75,6 +80,11 @@ class CouchDb extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -84,5 +94,14 @@ class CouchDb extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

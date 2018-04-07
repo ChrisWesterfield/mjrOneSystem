@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process\Sites;
+use App\System\Config\Site;
 
 /**
  * Class Html
@@ -15,7 +16,7 @@ class Apache extends SiteBaseAbstract
      */
     public function configure(): void
     {
-        $this->getOutput()->writeln('<info>generating apache config for '.$this->getConfigSet()->getMap().'</info>');
+        $this->printOutput('<info>generating apache config for '.$this->getConfigSet()->getMap().'</info>',1);
         $vars = [
             'docRoot' => $this->getConfigSet()->getTo(),
             'hostname'=>$this->getConfigSet()->getMap(),
@@ -37,16 +38,19 @@ class Apache extends SiteBaseAbstract
         {
             return;
         }
-        $outputFile = $this->getConfigSet()->getTo().'.conf';
-        $this->render($outputFile,'configuration/apache/apache.conf.twig',$vars);
+        $outputFile = $this->getConfigSet()->getMap().'.vhost';
+        if(!$this->getNginx(self::SITES_AVAILABLE.$outputFile, 'configuration/apache/apache.conf.twig'))
+        {
+            $this->printOutput('<error>Could not generate File!</error>');
+            return;
+        }
         $this->createLink(self::SITES_AVAILABLE.$outputFile,self::SITES_ENABLED.'20.'.$outputFile);
-
         $proxy = new Proxy();
         $proxy->setOutput($this->getOutput());
         $proxy->setContainer($this->getContainer());
         $proxy->setConfig($this->getConfig());
         $proxy->setConfigSet($this->getConfigSet());
         $proxy->configure();
-        $this->getOutput()->writeln('<info>apache config created</info>');
+        $this->printOutput('<info>apache config created</info>',1);
     }
 }

@@ -41,19 +41,19 @@ class PhpFpmSites extends ProcessAbstract implements ProcessInterface
     {
         $this->progBarInit(((5 * 4) + ($this->getConfig()->getFpm()->count() * 5)));
         //remove existing sites
-        if (SystemConfig::get()->getFeatures()->contains(Php72::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
             $this->execute(sprintf(self::DELETE, Php72::VERSION));
             $this->progBarAdv(5);
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php71::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php71::class)) {
             $this->execute(sprintf(self::DELETE, Php71::VERSION));
             $this->progBarAdv(5);
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php70::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php70::class)) {
             $this->execute(sprintf(self::DELETE, Php70::VERSION));
             $this->progBarAdv(5);
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php56::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php56::class)) {
             $this->execute(sprintf(self::DELETE, Php56::VERSION));
             $this->progBarAdv(5);
         }
@@ -108,19 +108,19 @@ class PhpFpmSites extends ProcessAbstract implements ProcessInterface
                 }
             }
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php72::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
             $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
             $this->progBarAdv(5);
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php71::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php71::class)) {
             $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
             $this->progBarAdv(5);
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php70::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php70::class)) {
             $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
             $this->progBarAdv(5);
         }
-        if (SystemConfig::get()->getFeatures()->contains(Php56::class)) {
+        if ($this->getConfig()->getFeatures()->contains(Php56::class)) {
             $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
             $this->progBarAdv(5);
         }

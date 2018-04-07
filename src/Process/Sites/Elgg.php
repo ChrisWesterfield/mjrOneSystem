@@ -15,14 +15,14 @@ class Elgg extends SiteBaseAbstract
      */
     public function configure(): void
     {
-        $this->getOutput()->writeln('<info>generating elgg config for '.$this->getConfigSet()->getMap().'</info>');
-        $outputFile = $this->getConfigSet()->getTo().'.vhost';
-        if($this->getNginx(self::SITES_AVAILABLE.$outputFile, 'configuration/nginx/elgg.conf.twig'))
+        $this->printOutput('<info>generating elgg config for '.$this->getConfigSet()->getMap().'</info>',1);
+        $outputFile = $this->getConfigSet()->getMap().'.vhost';
+        if(!$this->getNginx(self::SITES_AVAILABLE.$outputFile, 'configuration/nginx/elgg.conf.twig'))
         {
-            $this->getOutput()->writeln('<error>Could not generate File!</error>');
+            $this->printOutput('<error>Could not generate File!</error>');
             return;
         }
         $this->createLink(self::SITES_AVAILABLE.$outputFile,self::SITES_ENABLED.'20.'.$outputFile);
-        $this->getOutput()->writeln('<info>elgg config created</info>');
+        $this->printOutput('<info>elgg config created</info>',1);
     }
 }

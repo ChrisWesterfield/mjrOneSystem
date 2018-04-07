@@ -12,6 +12,7 @@ class RabbitMq extends BaseAbstract
 {
     public const NAME = 'RabbitMq';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

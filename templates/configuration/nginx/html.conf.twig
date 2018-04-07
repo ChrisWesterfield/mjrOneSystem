@@ -7,7 +7,7 @@ server {
 
     index index.html;
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined  %}{{ charSet }}{% else %}utf-8{% endif %};
 
     location / {
         try_files \$uri \$uri/ /index.html;

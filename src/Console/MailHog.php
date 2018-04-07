@@ -13,6 +13,7 @@ class MailHog extends BaseAbstract
 {
     public const NAME = 'MailHog';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

@@ -25,6 +25,7 @@ class Memcached extends ProcessAbstract implements ProcessInterface
         'cd '.self::PHP_LIB_DIR.' && '.self::GIT.' checkout php7',
     ];
     public const VERSION_TAG = 'memcached';
+    public const DEFAULT_PORT = 11211;
     public const VERSION_COMMANDS =
     [
         self::SUDO.' '.self::APT.' install php%s-memcache -y',
@@ -96,6 +97,7 @@ class Memcached extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -149,6 +151,7 @@ class Memcached extends ProcessAbstract implements ProcessInterface
             $this->execute(self::SUDO.' '.self::RM.' -Rf '.self::PHP_LIB_DIR);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

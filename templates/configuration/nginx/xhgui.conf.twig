@@ -7,7 +7,7 @@ server {
 
     index index.php;
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined %}{{ charSet }}{% else %}utf-8{% endif %};
 
     location / {
         try_files \$uri \$uri/ /index.php?\$args;
@@ -27,8 +27,8 @@ server {
         {% include "configuration/nginx/bits/params.conf.twig" %}
 
         fastcgi_intercept_errors off;
-        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
-        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
+        fastcgi_buffer_size {% if fcgiBufferSize is defined  %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
+        fastcgi_buffers {% if fcgiBuffer is defined  %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
     }
 
     location ~ /\.ht {

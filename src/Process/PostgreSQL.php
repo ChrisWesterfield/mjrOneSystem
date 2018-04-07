@@ -22,6 +22,7 @@ class PostgreSQL extends ProcessAbstract implements ProcessInterface
         self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART,
     ];
     public const VERSION_TAG = 'postgresql';
+    public const DEFAULT_PORT = 5432;
     /**
      * @return void
      */
@@ -70,6 +71,7 @@ class PostgreSQL extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -119,6 +121,7 @@ class PostgreSQL extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

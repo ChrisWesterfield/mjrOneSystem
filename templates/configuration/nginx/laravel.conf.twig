@@ -6,7 +6,7 @@ server {
 
     index index.html index.htm index.php;
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined %}{{ charSet }}{% else %}utf-8{% endif %};
 
     location / {
         try_files \$uri \$uri/ /index.php?\$query_string;
@@ -22,7 +22,7 @@ server {
 
     sendfile off;
 
-    client_max_body_size {% if is defined maxPost %}{{ maxPost }}{% else %}100{% endif %}M;
+    client_max_body_size {% if maxPost is defined %}{{ maxPost }}{% else %}100{% endif %}M;
 
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -33,11 +33,11 @@ server {
         {% include "configuration/nginx/bits/params.conf.twig" %}
 
         fastcgi_intercept_errors off;
-        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
-        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
-        fastcgi_connect_timeout {% if is defined fcgiConnectionTimeOut %}{{ fcgiConnectionTimeOut }}{% else %}300{% endif %};
-        fastcgi_send_timeout {% if is defined fcgiSendTimeOut %}{{ fcgiSendTimeOut }}{% else %}300{% endif %};
-        fastcgi_read_timeout {% if is defined fcgiReadTimeOut %}{{ fcgiReadTimeOut }}{% else %}300{% endif %};
+        fastcgi_buffer_size {% if fcgiBufferSize is defined  %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
+        fastcgi_buffers {% if fcgiBuffer is defined  %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
+        fastcgi_connect_timeout {% if fcgiConnectionTimeOut is defined  %}{{ fcgiConnectionTimeOut }}{% else %}300{% endif %};
+        fastcgi_send_timeout {% if fcgiSendTimeOut is defined  %}{{ fcgiSendTimeOut }}{% else %}300{% endif %};
+        fastcgi_read_timeout {% if fcgiReadTimeOut is defined  %}{{ fcgiReadTimeOut }}{% else %}300{% endif %};
     }
 
     location ~ /\.ht {

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Site;
 
 /**
  * Class Errbit
@@ -9,6 +10,7 @@ namespace App\Process;
  */
 class Errbit extends ProcessAbstract implements ProcessInterface
 {
+    public const SUBDOMAIN = 'errbit.';
     public const HOME = '/home/vagrant/errbit';
     public const LOG_FILE = self::HOME.'/errbit.install.log';
     public const USER_FILE = '/home/vagrant/user.json';
@@ -25,6 +27,7 @@ class Errbit extends ProcessAbstract implements ProcessInterface
     public const PACKAGE_ASSETS = 'cd '.self::HOME.' && RAILS_ENV=production '.self::BUNDLE.'  exec rake assets:precompile';
     public const PACKAGE_BOOTSTRAP = 'cd '.self::HOME.' && RAILS_ENV=production '.self::BUNDLE.'  exec rake errbit:bootstrap > '.self::LOG_FILE;
     public const USER_GEM_FILE = self::HOME.'/UserGemfile';
+    public const DEFAULT_PORT = 8030;
     public const USER_GEM_FILE_CONTENT = '
 gem \'unicorn\'
 gem \'unicorn-rails\'';
@@ -36,7 +39,7 @@ timeout 30         # restarts workers that hang for 30 seconds
 preload_app true
 
 listen "/home/vagrant/errbit/run/errbit.socket"
-listen "127.0.0.1:8030"
+listen "127.0.0.1:'.self::DEFAULT_PORT.'"
 pid "/home/vagrant/errbit/run/errbit.pid"
 stderr_path "/home/vagrant/base/log/errbit.stderr.log"
 stdout_path "/home/vagrant/base/log/errbit.stdout.log"
@@ -145,6 +148,7 @@ EMAIL_DELIVERY_METHOD=":smtp"
             $this->progBarAdv(5);
             $this->execute(self::RUN_ERRBIT_START);
             $this->progBarAdv(5);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -201,6 +205,11 @@ EMAIL_DELIVERY_METHOD=":smtp"
             $this->execute(self::RUN_ERRBIT_START);
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' mkdir '.self::HOME.' -Rf ');
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -210,5 +219,14 @@ EMAIL_DELIVERY_METHOD=":smtp"
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Errbit',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

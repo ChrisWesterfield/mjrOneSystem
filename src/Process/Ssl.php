@@ -115,7 +115,7 @@ class Ssl extends ProcessAbstract implements ProcessInterface
         );
         $this->execute(self::SUDO.' /bin/mkdir '.self::PATH_SSL_DIR.'/'.$crt);
         $this->execute('echo "'.$rendered.'" | '.self::SUDO.' '.self::TEE.' '.sprintf(self::CERT['CNF'], $crt));
-        $this->getOutput()->writeln('Generating Certificate '.$crt);
+        $this->printOutput('Generating Certificate '.$crt,1);
         $this->execute(
             sprintf(
                 self::COMMANDS_CRT_GENERATE['GENKEY'],
@@ -140,6 +140,6 @@ class Ssl extends ProcessAbstract implements ProcessInterface
                 $crt
             )
         );
-        $this->getOutput()->writeln('done');
+        $this->printOutput('done',1);
     }
 }

@@ -5,7 +5,7 @@ server {
     server_name {{ hostname }};
     root {{ docRoot }};
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined %}{{ charSet }}{% else %}utf-8{% endif %};
 
     if (\$http_x_forwarded_host) {
         return 400;
@@ -36,8 +36,8 @@ server {
         fastcgi_param  SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include        fastcgi_params;
         {% include "configuration/nginx/bits/params.conf.twig" %}
-        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
-        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
+        fastcgi_buffer_size {% if fcgiBufferSize is defined  %}{{ fcgiBufferSize }}{% else %}16k{% endif %};
+        fastcgi_buffers {% if fcgiBuffer is defined  %}{{ fcgiBuffer }}{% else %}4 16k{% endif %};
     }
 
     location ~ /(mysite|framework|cms)/.*\.(php|php3|php4|php5|phtml|inc)$ {
@@ -84,9 +84,9 @@ server {
         fastcgi_index  index.php;
         fastcgi_param  SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include        fastcgi_params;
-        fastcgi_buffer_size {% if is defined fcgiBufferSize %}{{ fcgiBufferSize }}{% else %}32k{% endif %};
-        fastcgi_busy_buffers_size {% if is defined fcgiBusyBufferSize %}{{ fcgiBusyBufferSize }}{% else %}64k{% endif %};
-        fastcgi_buffers {% if is defined fcgiBuffer %}{{ fcgiBuffer }}{% else %}4 32k{% endif %};
+        fastcgi_buffer_size {% if fcgiBufferSize is defined  %}{{ fcgiBufferSize }}{% else %}32k{% endif %};
+        fastcgi_busy_buffers_size {% if fcgiBusyBufferSize is defined  %}{{ fcgiBusyBufferSize }}{% else %}64k{% endif %};
+        fastcgi_buffers {% if fcgiBuffer is defined  %}{{ fcgiBuffer }}{% else %}4 32k{% endif %};
         {% include "configuration/nginx/bits/params.conf.twig" %}
     }
 

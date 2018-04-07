@@ -37,12 +37,13 @@ class Apache2 extends ProcessAbstract implements ProcessInterface
         'rewrite'
     ];
     public const VERSION_TAG = 'apache2';
+    public const DEFAULT_PORT = 81;
     public const LISTEN_FILE = '
 # If you just change the port or add more ports here, you will likely also
 # have to change the VirtualHost statement in
 # /etc/apache2/sites-enabled/000-default.conf
 
-Listen 81
+Listen '.self::DEFAULT_PORT.'
 
 #<IfModule ssl_module>
 #	Listen 444
@@ -282,6 +283,7 @@ Listen 81
             $this->progBarAdv(5);
             $this->execute(self::ENABLE_SERVICE . ' apache2');
             $this->progBarAdv(5);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->getConfig()->addFeature(get_class($this));
             $this->progBarFin();
         }
@@ -306,6 +308,7 @@ Listen 81
             $this->progBarAdv(20);
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->getConfig()->removeFeature(get_class($this));
             $this->progBarFin();
         }

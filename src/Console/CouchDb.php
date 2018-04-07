@@ -13,6 +13,7 @@ class CouchDb extends BaseAbstract
 {
     public const NAME = 'CouchDB';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

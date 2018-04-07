@@ -27,6 +27,7 @@ class Mongo extends ProcessAbstract implements ProcessInterface
     public const CONFIGURE = [
         self::SUDO . ' mongo admin --eval "db.createUser({user:\'vagrant\',pwd:\'123\',roles:[\'root\']})"',
     ];
+    public const DEFAULT_PORT = 27017;
 
     /**
      * @return void
@@ -52,6 +53,7 @@ class Mongo extends ProcessAbstract implements ProcessInterface
             $this->execute(self::START);
             $this->progBarAdv(5);
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -72,6 +74,7 @@ class Mongo extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

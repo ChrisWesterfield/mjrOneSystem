@@ -11,11 +11,11 @@ server {
     server_name {{ hostname }};
     root {{ docRoot }};
 
-    client_max_body_size {% if is defined maxPost %}{{ maxPost }}M{% else %}4G{% endif %};
+    client_max_body_size {% if maxPost is defined  %}{{ maxPost }}M{% else %}4G{% endif %};
 
     index index.php;
 
-    charset {% if is defined charSet %}{{ charSet }}{% else %}utf-8{% endif %};
+    charset {% if charSet is defined  %}{{ charSet }}{% else %}utf-8{% endif %};
 
     access_log off;
     error_log  {{ logPath }}/{{ hostname }}.error.log error;

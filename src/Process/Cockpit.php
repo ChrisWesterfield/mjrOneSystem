@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Site;
 
 /**
  * Class Cockpit
@@ -21,9 +22,12 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
         self::SUDO .' '.self::APT.' update',
     ];
     public const VERSION_TAG = 'cockpit';
+    public const SUBDOMAIN = 'cockpit.';
+    public const DEFAULT_PORT = 7777;
     /**
      * @return void
      */
+
     public function install(): void
     {
         if(!file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG))
@@ -47,6 +51,7 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
             }
             $this->getConfig()->addFeature(get_class($this));
             $this->execute(self::SERVICE_CMD.' cockpit '.self::SERVICE_START);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -70,11 +75,16 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
                 $this->execute(self::SUDO. ' '.self::APT.' purge -y cockpit-docker');
                 $this->progBarAdv(20);
             }
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->execute(self::SUDO.' '.self::RM.' -f /etc/apt/sources.list.d/cockpit-project-ubuntu-cockpit-xenial.list');
             $this->progBarAdv(5);
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN .$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN .$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -84,5 +94,14 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

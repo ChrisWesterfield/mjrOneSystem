@@ -31,6 +31,9 @@ Pin-Priority: 1000';
         self::SUDO.' chown -R vagrant:vagrant /opt/zray',
     ];
     public const VERSION_TAG = 'rabbitmq';
+    public const SUBDOMAIN = 'rmqa.';
+    public const DEFAULT_PORT = 5672;
+    public const DEFAULT_PORT_ADMIN = 15672;
     /**
      * @return void
      */
@@ -84,6 +87,8 @@ Pin-Priority: 1000';
             }
             $this->execute(self::SUDO.' rabbitmq-plugins enable rabbitmq_management');
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT_ADMIN);
             $this->progBarFin();
         }
     }
@@ -138,6 +143,12 @@ Pin-Priority: 1000';
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT_ADMIN);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN .$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN .$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -147,5 +158,14 @@ Pin-Priority: 1000';
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

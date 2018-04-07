@@ -13,6 +13,7 @@ class Jenkins extends BaseAbstract
 {
     public const NAME = 'Jenkins';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

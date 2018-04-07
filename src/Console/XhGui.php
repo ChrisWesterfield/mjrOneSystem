@@ -12,6 +12,8 @@ class XhGui extends BaseAbstract
 {
     public const NAME = 'XhGui';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
+    public const ADD_PHP = true;
     /**
      *
      */

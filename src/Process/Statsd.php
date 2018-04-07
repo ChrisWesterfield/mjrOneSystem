@@ -23,6 +23,7 @@ class Statsd extends ProcessAbstract implements ProcessInterface
     public const GRAPHITE_WEB = self::GRAPHITE_SRC.'/graphite-web';
     public const STATSD_SRC = self::OPT.'/statsd';
     public const GRAFANA_SRC = self::OPT.'/grafana';
+    public const SUBDOMAIN = 'statsd.';
     public const COMMANDS = [
         self::SUDO.' '.Python::VIRTUAL_ENV.' '.self::GRAPHITE_SRC,
         self::SUDO.' '.self::GIT_CLONE.' https://github.com/graphite-project/graphite-web.git '.self::GRAPHITE_WEB,
@@ -38,6 +39,7 @@ class Statsd extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'zray';
     public const CONFIG_DIR = self::VAGRANT_HOME.'/etc/graphite/';
+    public const DEFAULT_DIR = 8126;
     /**
      * @return void
      */
@@ -72,6 +74,7 @@ class Statsd extends ProcessAbstract implements ProcessInterface
             $this->createLink(self::CONFIG_DIR.'config.js',self::STATSD_SRC.'/conf/config.js');
             $this->progBarAdv(5);
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -106,6 +109,11 @@ class Statsd extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN .$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN .$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -115,5 +123,14 @@ class Statsd extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

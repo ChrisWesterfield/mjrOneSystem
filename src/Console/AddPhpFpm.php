@@ -116,6 +116,7 @@ class AddPhpFpm extends ContainerAwareCommand
         $fpm = new Fpm($options);
         SystemConfig::get()->getFpm()->set($fpm->getName(), $fpm);
         SystemConfig::get()->writeConfigs();
+        $output->writeln('<comment>PHP Configs need to be refreshed: mjrone:sites:phpfpm</comment>');
         $output->writeln('done');
     }
 }

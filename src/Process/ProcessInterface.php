@@ -56,7 +56,8 @@ interface ProcessInterface
     public const NPM = '/usr/bin/npm';
     public const MKDIR = '/bin/mkdir';
     public const APT_KEY = '/usr/bin/apt-key';
-    public const VAGRANT_HOME = '/home/vagrant/base';
+    public const VAGRANT_USER_DIR = '/home/vagrant';
+    public const VAGRANT_HOME = self::VAGRANT_USER_DIR.'/base';
     public const VAGRANT_ETC = self::VAGRANT_HOME.'/etc';
     public const VAGRANT_BIN = self::VAGRANT_HOME.'/bin';
     public const SUPERVISOR_D = self::VAGRANT_ETC.'/supervisor';

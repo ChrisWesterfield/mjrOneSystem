@@ -39,6 +39,7 @@ Pin-Priority: 1001';
     ];
     public const SERVICE_NAME = 'mysql';
     public const VERSION_TAG = 'mysql57';
+    public const DEFAULT_PORT = 3306;
 
     /**
      * @return void
@@ -84,6 +85,7 @@ Pin-Priority: 1001';
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -154,6 +156,7 @@ Pin-Priority: 1001';
             $this->execute(self::SUDO.' '.self::RM.' -Rf /etc/mysql');
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

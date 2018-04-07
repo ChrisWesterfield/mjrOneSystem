@@ -12,6 +12,7 @@ class Munin extends BaseAbstract
 {
     public const NAME = 'Munin';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

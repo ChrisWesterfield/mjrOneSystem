@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Site;
 
 /**
  * Class Zray
@@ -14,6 +15,7 @@ class DarkStat extends ProcessAbstract implements ProcessInterface
         'darkstat'
     ];
     public const VERSION_TAG = 'darkstat';
+    public const DEFAULT_PORT = 667;
     public const DEFAULT_CONTENT = '# Turn this to yes when you have configured the options below.
 START_DARKSTAT=yes
 
@@ -24,7 +26,7 @@ START_DARKSTAT=yes
 INTERFACE=\"-i eth0 -i eth1\"
 
 #DIR=\"/var/lib/darkstat\"
-#PORT=\"-p 666\"
+PORT=\"-p '.self::DEFAULT_PORT.'\"
 BINDIP=\"-b 127.0.0.1\"
 #LOCAL=\"-l 192.168.0.0/255.255.255.0\"
 
@@ -42,6 +44,8 @@ DAYLOG=\"--daylog darkstat.log\"
     /**
      * @return void
      */
+    public const SUBDOMAIN = 'darkstat.';
+
     public function install(): void
     {
         if(!file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG))
@@ -60,6 +64,7 @@ DAYLOG=\"--daylog darkstat.log\"
             $this->execute(self::SERVICE_CMD.' darkstat'.self::SERVICE_START);
             $this->progBarAdv(5);
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -81,6 +86,11 @@ DAYLOG=\"--daylog darkstat.log\"
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
@@ -90,5 +100,14 @@ DAYLOG=\"--daylog darkstat.log\"
      */
     public function configure(): void
     {
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

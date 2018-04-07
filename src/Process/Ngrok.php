@@ -17,6 +17,7 @@ class Ngrok extends ProcessAbstract implements ProcessInterface
         self::RM.' ngrok-stable-linux-amd64.zip',
     ];
     public const VERSION_TAG = 'ngrok';
+    public const DEFAULT_PORT = 4040;
     /**
      * @return void
      */
@@ -37,6 +38,7 @@ class Ngrok extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -60,6 +62,7 @@ class Ngrok extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

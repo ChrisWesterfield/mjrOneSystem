@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
+use App\System\Config\Fpm;
+use App\System\Config\Site;
 
 /**
  * Class PhpMyAdmin
@@ -21,6 +23,8 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
         'cd '.self::APP_DIR.'/temes && '.self::WGET .' https://files.phpmyadmin.net/themes/fallen/0.5/fallen-0.5.zip | unzip -'
     ];
     public const VERSION_TAG = 'phpmyadmin';
+    public const FPM_IDENTITY = 'admin.phpmyadmin';
+    public const SUBDOMAIN = 'pma.';
     /**
      * @return void
      */
@@ -67,6 +71,17 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            }
+            if($this->getConfig()->getFpm()->containsKey(self::FPM_IDENTITY))
+            {
+                $listen = explode(':',$this->getConfig()->getFpm()->get(self::FPM_IDENTITY));
+                $port = (int)$listen[1];
+                $this->getConfig()->getUsedPorts()->removeElement($port);
+                $this->getConfig()->getFpm()->remove(self::FPM_IDENTITY);
+            }
             $this->progBarFin();
         }
     }
@@ -76,5 +91,40 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
+        $port = 9001;
+        for($i=9001; $i<20000; $i++)
+        {
+            if(!$this->getConfig()->getUsedPorts()->contains($i))
+            {
+                $port = $i;
+            }
+        }
+        if($i>19999)
+        {
+            $this->getOutput()->writeln('no available Ports left!');
+        }
+        $this->getConfig()->getUsedPorts()->add($i);
+        $fpm = new Fpm(
+            [
+                'name'=> self::FPM_IDENTITY,
+                'user'=>'vagrant',
+                'group'=>'vagrant',
+                'listen'=>'127.0.0.1:'.$i,
+                'pm'=>Fpm::ONDEMAND,
+                'maxChildren'=>2,
+            ]
+        );
+        $this->getConfig()->getFpm()->set($fpm->getName(),$fpm);
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'PhpMyAdmin',
+                'to'=>self::APP_DIR,
+                'fpm'=>$fpm->getName(),
+                'zRay'=>false,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

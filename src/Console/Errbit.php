@@ -13,6 +13,7 @@ class Errbit extends BaseAbstract
 {
     public const NAME = 'Errbit';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

@@ -64,6 +64,7 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
         $sites = $this->getConfig()->getSites();
         if($sites->count() > 0)
         {
+            $this->progBarInit(5);
             foreach($sites as $site)
             {
                 if(array_key_exists($site->getType(),self::NGINX))
@@ -78,6 +79,7 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
                         $sslInstance->install();
                         $sslInstance->configure();
                         $sslInstance->generateCert($site->getMap());
+                        $this->progBarAdv(5);
                     }
                     $class = self::NGINX[$site->getType()];
                     /** @var SiteBaseAbstract $inst */
@@ -87,8 +89,10 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
                     $inst->setConfigSet($site);
                     $inst->setContainer($this->getContainer());
                     $inst->configure();
+                    $this->progBarAdv(5);
                 }
             }
+            $this->progBarFin();
         }
         $this->execute(self::SERVICE_CMD.' '.Nginx::SERVICE_NAME.' '.self::SERVICE_RESTART);
     }

@@ -15,6 +15,8 @@ class Beanstalked extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'beanstalkd';
 
+    public const DEFAULT_PORT = 11300;
+
     /**
      * @return void
      */
@@ -30,6 +32,7 @@ class Beanstalked extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(30);
             $this->execute(self::SUDO . ' ' . self::SED . ' -i "s/#START=yes/START=yes/" /etc/default/beanstalkd');
             $this->progBarAdv(5);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->getConfig()->addFeature(get_class($this));
             $this->progBarFin();
         }
@@ -51,6 +54,7 @@ class Beanstalked extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

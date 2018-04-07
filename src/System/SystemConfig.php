@@ -122,6 +122,11 @@ class SystemConfig
     protected $slaveCount=0;
 
     /**
+     * @var ArrayCollection
+     */
+    protected $usedPorts;
+
+    /**
      * SystemConfig constructor.
      */
     protected function __construct()
@@ -149,6 +154,14 @@ class SystemConfig
         $this->sites = new ArrayCollection();
         $this->features = new ArrayCollection();
         $this->authorize = $config['authorize'];
+        if(array_key_exists('usedPorts',$config))
+        {
+            $this->usedPorts = new ArrayCollection($config['usedPorts']);
+        }
+        else
+        {
+            $this->usedPorts = new ArrayCollection([]);
+        }
         $this->slaveCount = (array_key_exists('slaveCount',$config)?$config['slaveCount']:0);
         if(array_key_exists('blackfire', $config))
         {
@@ -229,6 +242,14 @@ class SystemConfig
                 }
             }
         }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUsedPorts(): ArrayCollection
+    {
+        return $this->usedPorts;
     }
 
     /**

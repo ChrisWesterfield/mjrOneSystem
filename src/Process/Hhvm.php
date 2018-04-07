@@ -22,13 +22,14 @@ class Hhvm extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'hhvm';
     public const CONFIG_FILE = '/etc/default/hhvm';
+    public const DEFAULT_PORT = 9900;
     public const CONFIG_CONTENT = '; php options
 
 pid = /var/run/hhvm/pid
 
 ; hhvm specific
 
-hhvm.server.port = 9900
+hhvm.server.port = '.self::DEFAULT_PORT.'
 hhvm.server.type = fastcgi
 hhvm.server.default_document = index.php
 hhvm.log.use_log_file = true
@@ -87,6 +88,7 @@ RUN_AS_GROUP=\"vagrant\"
             $this->progBarAdv(20);
             $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART);
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -110,6 +112,7 @@ RUN_AS_GROUP=\"vagrant\"
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

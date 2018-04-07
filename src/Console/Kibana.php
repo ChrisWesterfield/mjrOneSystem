@@ -12,6 +12,7 @@ class Kibana extends BaseAbstract
 {
     public const NAME = 'Kibana';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
     /**
      *
      */

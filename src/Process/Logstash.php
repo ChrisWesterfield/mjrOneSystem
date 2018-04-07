@@ -21,6 +21,7 @@ class Logstash extends ProcessAbstract implements ProcessInterface
         self::ENABLE_SERVICE.' '.self::VERSION_TAG,
     ];
     public const VERSION_TAG = 'logstash';
+    public const DEFAULT_PORT = 5000;
     /**
      * @return void
      */
@@ -41,6 +42,7 @@ class Logstash extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(15);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -64,6 +66,7 @@ class Logstash extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

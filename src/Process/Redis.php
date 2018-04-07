@@ -19,6 +19,7 @@ class Redis extends ProcessAbstract implements ProcessInterface
     public const COMMANDS = [
     ];
     public const VERSION_TAG = 'redis';
+    public const DEFAULT_PORT = 6379;
     /**
      * @return void
      */
@@ -34,6 +35,7 @@ class Redis extends ProcessAbstract implements ProcessInterface
             $this->installPackages(self::SOFTWARE);
             $this->progBarAdv(25);
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }
@@ -55,6 +57,7 @@ class Redis extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->progBarFin();
         }
     }

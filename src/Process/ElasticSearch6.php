@@ -1,11 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Process;
-use App\Process\QaTools\PhpCpd;
-use App\Process\QaTools\PhpCs;
-use App\Process\QaTools\PhpDox;
-use App\Process\QaTools\PhpLOC;
-use App\Process\QaTools\PhpUnit;
+use App\System\Config\Site;
 
 /**
  * Class Ant
@@ -27,6 +23,8 @@ class ElasticSearch6 extends ProcessAbstract implements ProcessInterface
         'echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | '.self::SUDO.' '.self::TEE.' '.self::LIST_FILE,
         self::SUDO.' '.self::APT.' update',
     ];
+    public const DEFAULT_PORT = 9200;
+    public const DEFAULT_PORT_I = 9300;
     public const COMMANDS2 = [
         self::SUDO.' '.self::SED.' -i "s/#cluster.name: mjrone/cluster.name: vagrant/" /etc/elasticsearch/elasticsearch.yml',
         self::ENABLE_SERVICE.' elasticsearch',
@@ -36,6 +34,8 @@ class ElasticSearch6 extends ProcessAbstract implements ProcessInterface
     /**
      *
      */
+    public const SUBDOMAIN = 'es.';
+
     public function install():void
     {
         if(!file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG) && !file_exists(self::INSTALLED_APPS_STORE.ElasticSearch5::VERSION_TAG))
@@ -58,6 +58,8 @@ class ElasticSearch6 extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
+            $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT_I);
             $this->progBarFin();
         }
     }
@@ -79,12 +81,26 @@ class ElasticSearch6 extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
             $this->getConfig()->removeFeature(get_class($this));
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
+            $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT_I);
+            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN .$this->getConfig()->getName()))
+            {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN .$this->getConfig()->getName());
+            }
             $this->progBarFin();
         }
     }
 
     public function configure():void
     {
-
+        $site = new Site(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Proxy',
+                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+                'category'=>Site::CATEGORY_ADMIN,
+            ]
+        );
+        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }
