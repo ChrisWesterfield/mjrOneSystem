@@ -101,6 +101,11 @@ class Site extends ConfigAbstract implements ConfigInterface
     protected $fcgiBusyBufferSize;
 
     /**
+     * @var string
+     */
+    protected $category='site';
+
+    /**
      * Site constructor.
      * @param array $config
      */
@@ -113,6 +118,24 @@ class Site extends ConfigAbstract implements ConfigInterface
                 $this->{$id} = $item;
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategory(): string
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     * @return Site
+     */
+    public function setCategory(string $category): Site
+    {
+        $this->category = $category;
+        return $this;
     }
 
     /**
