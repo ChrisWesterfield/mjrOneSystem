@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
+
 namespace App\System\Config;
+
 use App\Process\Sites\SiteBaseAbstract;
 
 /**
@@ -10,6 +12,20 @@ use App\Process\Sites\SiteBaseAbstract;
  */
 class Site extends ConfigAbstract implements ConfigInterface
 {
+    public const CATEGORY_APP = 'app';
+    public const CATEGORY_EXTERNAL = 'ext';
+    public const CATEGORY_ADMIN = 'admin';
+    public const CATEGORY_INFO = 'info';
+    public const CATEGORY_STATISTICS = 'stats';
+    public const CATEGORY_OTHER = 'other';
+    public const CATEGORIES = [
+        self::CATEGORY_APP,
+        self::CATEGORY_EXTERNAL,
+        self::CATEGORY_ADMIN,
+        self::CATEGORY_INFO,
+        self::CATEGORY_STATISTICS,
+        self::CATEGORY_OTHER,
+    ];
     /**
      * @var string
      */
@@ -38,32 +54,32 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @var int|null
      */
-    protected $http=null;
+    protected $http = null;
 
     /**
      * @var int|null
      */
-    protected $https=443;
+    protected $https = 443;
 
     /**
      * @var string
      */
-    protected $charSet='uft-8';
+    protected $charSet = 'uft-8';
 
     /**
      * @var array
      */
-    protected $fcgiParams=[];
+    protected $fcgiParams = [];
 
     /**
      * @var bool
      */
-    protected $zRay=false;
+    protected $zRay = false;
 
     /**
      * @var int|null
      */
-    protected $clientMaxBodySize=16;
+    protected $clientMaxBodySize = 16;
 
     /**
      * @var int
@@ -103,7 +119,7 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @var string
      */
-    protected $category='site';
+    protected $category = self::CATEGORY_APP;
 
     /**
      * Site constructor.
@@ -111,10 +127,8 @@ class Site extends ConfigAbstract implements ConfigInterface
      */
     public function __construct(array $config)
     {
-        if(!empty($config))
-        {
-            foreach($config as $id=>$item)
-            {
+        if (!empty($config)) {
+            foreach ($config as $id => $item) {
                 $this->{$id} = $item;
             }
         }
@@ -134,7 +148,9 @@ class Site extends ConfigAbstract implements ConfigInterface
      */
     public function setCategory(string $category): Site
     {
-        $this->category = $category;
+        if (in_array($category, self::CATEGORIES)) {
+            $this->category = $category;
+        }
         return $this;
     }
 
@@ -285,7 +301,7 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @return bool
      */
-    public function isZray():bool
+    public function isZray(): bool
     {
         return $this->zRay;
     }
@@ -294,7 +310,7 @@ class Site extends ConfigAbstract implements ConfigInterface
      * @param bool $zray
      * @return Site
      */
-    public function setZray(bool $zray):Site
+    public function setZray(bool $zray): Site
     {
         $this->zRay = $zray;
         return $this;
@@ -448,7 +464,7 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @return string
      */
-    public function getFpm():?string
+    public function getFpm(): ?string
     {
         return $this->fpm;
     }
