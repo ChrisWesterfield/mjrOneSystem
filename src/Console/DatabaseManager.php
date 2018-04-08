@@ -32,7 +32,7 @@ class DatabaseManager extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('mjrone:database')
+        $this->setName('mjrone:add:database')
             ->setHelp('manage database')
             ->setDescription('manage database')
             ->addOption('operation','o',InputOption::VALUE_REQUIRED,'Operation to be executed (c=create, d=drop, l=list === default)','l')

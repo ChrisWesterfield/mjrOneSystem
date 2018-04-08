@@ -20,6 +20,9 @@ class OhMyZsh extends ProcessAbstract implements ProcessInterface
         'printf "\nsource ~/.profile\n" | tee -a /home/vagrant/.zshrc',
         self::SUDO .' '. self::CHOWN.'chown -R vagrant:vagrant /home/vagrant/.oh-my-zsh',
         self::SUDO .' '. self::CHOWN.'vagrant:vagrant /home/vagrant/.zshrc',
+        'echo "autoload bashcompinit" >> /home/vagrant/.zshrc',
+        'echo "bashcompinit" >> /home/vagrant/.zshrc',
+        'echo "source /home/vagrant/base/.bash_profile" >> /home/vagrant/.zshrc'
     ];
     public const VERSION_TAG = 'ohmyzsh';
     /**
