@@ -16,7 +16,7 @@ class PhpFpmSites extends ProcessAbstract implements ProcessInterface
 {
     public const TEMPLATE = 'configuration/php/fpm.conf.twig';
     public const DELETE = self::SUDO . ' find /etc/php/%s/fpm/pool.d/ -type f -not -name \'www.conf\'  -delete';
-
+    public const VERSION_TAG = 'PHP FPM Site Generator';
     /**
      * @return void
      */

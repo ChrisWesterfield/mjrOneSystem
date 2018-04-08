@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @package App\Console
  * @author chris westerfield <chris@mjr.one>
  */
-class Hhvm extends ContainerAwareCommand
+class Hhvm extends BaseAbstract
 {
     public const NAME = 'Hhvm';
     public const SERVICE_CLASS = Process::class;

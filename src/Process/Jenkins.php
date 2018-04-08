@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
+
 namespace App\Process;
+
 use App\Process\QaTools\PhpCpd;
 use App\Process\QaTools\PhpCs;
 use App\Process\QaTools\PhpDox;
@@ -19,9 +21,9 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
         'jenkins'
     ];
     public const COMMANDS = [
-        self::WGET.' -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | '.self::SUDO.' apt-key add -',
-        'echo "deb http://pkg.jenkins-ci.org/debian binary/" | '.self::SUDO.' '.self::TEE.' /etc/apt/sources.list.d/jenkins.list',
-        self::SUDO.' '.self::APT.' update',
+        self::WGET . ' -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | ' . self::SUDO . ' apt-key add -',
+        'echo "deb http://pkg.jenkins-ci.org/debian binary/" | ' . self::SUDO . ' ' . self::TEE . ' /etc/apt/sources.list.d/jenkins.list',
+        self::SUDO . ' ' . self::APT . ' update',
     ];
     public const REQUIREMENTS = [
         Java::class,
@@ -33,15 +35,13 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
     /**
      *
      */
-    public function install():void
+    public function install(): void
     {
-        if(!file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG))
-        {
+        if (!file_exists(self::INSTALLED_APPS_STORE . self::VERSION_TAG)) {
             $this->progBarInit(65);
             $this->touch(self::INSTALLED_APPS_STORE, self::VERSION_TAG);
             $this->progBarAdv(5);
-            foreach(self::COMMANDS as $com)
-            {
+            foreach (self::COMMANDS as $com) {
                 $this->execute($com);
                 $this->progBarAdv(5);
             }
@@ -55,10 +55,9 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
         }
     }
 
-    public function uninstall():void
+    public function uninstall(): void
     {
-        if(file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG))
-        {
+        if (file_exists(self::INSTALLED_APPS_STORE . self::VERSION_TAG)) {
             $this->progBarInit(50);
             $this->checkUninstall(get_class($this));
             $this->progBarAdv(5);
@@ -66,29 +65,26 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(10);
             $this->uninstallPackages(self::SOFTWARE);
             $this->progBarAdv(25);
-            $this->execute(self::SUDO.' '.self::RM.' -f /etc/apt/sources.list.d/jenkins.list');
+            $this->execute(self::SUDO . ' ' . self::RM . ' -f /etc/apt/sources.list.d/jenkins.list');
             $this->progBarAdv(5);
-            unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
+            unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->getConfig()->removeFeature(get_class($this));
             $this->getConfig()->getUsedPorts()->remove(self::DEFAULT_PORT);
-            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
-            {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            if ($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN . $this->getConfig()->getName())) {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
             }
             $this->progBarFin();
         }
     }
 
-    public function configure():void
+    public function configure(): void
     {
-        $site = new Site(
-            [
-                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
-                'type'=>'Proxy',
-                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
-                'category'=>Site::CATEGORY_OTHER,
-            ]
-        );
-        $this->getConfig()->getSites()->set($site->getMap(),$site);
+        $this->addSite([
+            'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
+            'type' => 'Proxy',
+            'listen' => '127.0.0.1:' . self::DEFAULT_PORT,
+            'category' => Site::CATEGORY_OTHER,
+            'description' => 'Jenkins Build Server'
+        ]);
     }
 }

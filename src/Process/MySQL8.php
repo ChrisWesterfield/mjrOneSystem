@@ -57,34 +57,6 @@ Pin-Priority: 1001';
                 $this->execute($COMMAND);
                 $this->progBarAdv(5);
             }
-            if($this->getConfig()->getFeatures()->contains(Php56::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php56::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php70::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php70::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php71::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php71::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php72::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php72::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
             $this->getConfig()->addFeature(get_class($this));
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
@@ -118,34 +90,6 @@ Pin-Priority: 1001';
             $this->progBarAdv(5);
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
-            if($this->getConfig()->getFeatures()->contains(Php56::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php56::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php70::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php70::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php71::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php71::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php72::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php72::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
             $this->execute(self::SUDO.' '.self::APT.' remove mysql-* -y');
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::APT.' autoremove -y');

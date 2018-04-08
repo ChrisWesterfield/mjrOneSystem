@@ -78,6 +78,8 @@ class Install extends ContainerAwareCommand
     {
         /** @var ProcessInterface $instance */
         $instance = new $class();
+        $operation = ($instance instanceof WebSitesNginx || $instance instanceof WebSitesApache || $instance instanceof PhpFpmSites)?'Running ':'Installing';
+        $output->writeln($operation.$class::VERSION_TAG);
         $instance->setIo($style);
         $instance->setContainer($this->getContainer());
         $instance->setConfig($config);

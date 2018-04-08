@@ -3,6 +3,8 @@ declare(strict_types=1);
 namespace App\Process;
 
 
+use App\System\Config\Fpm;
+use App\System\Config\Site;
 use App\System\SystemConfig;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -157,7 +159,7 @@ abstract class ProcessAbstract
     {
         if(empty($list))
         {
-           return;
+            return;
         }
         $cmd = ProcessInterface::APT_INSTALL;
         $class = get_class($this);
@@ -299,5 +301,41 @@ abstract class ProcessAbstract
             }
         }
         return $this;
+    }
+
+    /**
+     * @param array|null $web
+     * @param array|null $fpm
+     */
+    public function addSite(array $web=null, array $fpm = null):void
+    {
+        $fpmInstance = null;
+        if(!empty($fpm))
+        {
+            $port = 9001;
+            for ($i = 9001; $i < 20000; $i++) {
+                if (!$this->getConfig()->getUsedPorts()->contains($i)) {
+                    $port = $i;
+                    break;
+                }
+            }
+            if ($i > 19999) {
+                $this->getOutput()->writeln('no available Ports left!');
+            }
+            $this->getConfig()->getUsedPorts()->add($i);
+            $fpm['listen'] = str_replace(':%%%PORT%%%','',$fpm['listen']);
+            $fpm['port'] = $i;
+            $fpmInstance = new Fpm($fpm);
+            $this->getConfig()->getFpm()->set($fpmInstance->getName(), $fpmInstance);
+        }
+        if(!empty($web))
+        {
+            if(array_key_exists('fpm', $web) && $fpmInstance instanceof Fpm && !empty($fpmInstance))
+            {
+                $web['fpm'] = $fpmInstance->getName();
+            }
+            $webInstance = new Site($web);
+            $this->getConfig()->getSites()->set($webInstance->getMap(), $webInstance);
+        }
     }
 }

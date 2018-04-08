@@ -19,6 +19,7 @@ class WebSitesApache extends ProcessAbstract implements ProcessInterface
         'apache'=>Apache::class,
         'pimcore'=> PimCore::class,
     ];
+    public const VERSION_TAG = 'Apache2 Site Generator';
 
     /**
      * @return void
@@ -39,6 +40,8 @@ class WebSitesApache extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
+        $this->execute(self::SUDO.' '.self::FIND.' '.Apache::SITES_AVAILABLE.' -type f -exec rm -f {} +');
+        $this->execute(self::SUDO.' '.self::FIND.' '.Apache::SITES_ENABLED.' -type f -exec rm -f {} +');
         /** @var Site[] $sites */
         $sites = $this->getConfig()->getSites();
         if(!empty($sites))

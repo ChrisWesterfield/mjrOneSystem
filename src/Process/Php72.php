@@ -51,8 +51,10 @@ class Php72 extends ProcessAbstract implements ProcessInterface
         Nginx::class,
     ];
     public const VERSION_TAG = 'php72';
-    public const FPM_IDENTITY = 'admin.info71';
-    public const SUBDOMAIN = 'info71.';
+    public const FPM_IDENTITY = 'admin.info72';
+    public const SUBDOMAIN = 'info72.';
+    public const SYSTEM_FPM_IDENTITY = 'admin.system';
+    public const SYSTEM_SUBDOMAIN = '';
 
     /**
      * @return void
@@ -174,38 +176,50 @@ class Php72 extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        $port = 9001;
-        for ($i = 9001; $i < 20000; $i++) {
-            if (!$this->getConfig()->getUsedPorts()->contains($i)) {
-                $port = $i;
-            }
-        }
-        if ($i > 19999) {
-            $this->getOutput()->writeln('no available Ports left!');
-        }
-        $this->getConfig()->getUsedPorts()->add($i);
-        $fpm = new Fpm(
-            [
-                'name' => self::FPM_IDENTITY,
-                'user' => 'vagrant',
-                'group' => 'vagrant',
-                'listen' => '127.0.0.1:' . $i,
-                'pm' => Fpm::ONDEMAND,
-                'maxChildren' => 2,
-                'version' => self::VERSION,
-            ]
-        );
-        $this->getConfig()->getFpm()->set($fpm->getName(), $fpm);
-        $site = new Site(
+        //@todo MultiMaster + MultiSlave Support
+        $config = '
+        ';
+        $this->addSite(
             [
                 'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
                 'type' => 'PhpApp',
                 'to' => self::VAGRANT_SYSTEM . '/public/' . self::VERSION,
-                'fpm' => $fpm->getName(),
+                'fpm' => true,
                 'zRay' => false,
                 'category' => Site::CATEGORY_INFO,
+                'description'=>'Php 7.2 Info Page',
+            ],
+            [
+                'name' => self::FPM_IDENTITY,
+                'user' => 'vagrant',
+                'group' => 'vagrant',
+                'listen' => '127.0.0.1:%%%PORT%%%',
+                'pm' => Fpm::ONDEMAND,
+                'maxChildren' => 2,
+                'version' => self::VERSION,
             ]
+
         );
-        $this->getConfig()->getSites()->set($site->getMap(), $site);
+        $this->addSite(
+            [
+                'map' => self::SYSTEM_SUBDOMAIN . $this->getConfig()->getName(),
+                'type' => 'Symfony4',
+                'to' => self::VAGRANT_SYSTEM . '/public/',
+                'fpm' => true,
+                'zRay' => false,
+                'category' => Site::CATEGORY_INFO,
+                'description'=>'Startpage',
+            ],
+            [
+                'name' => self::SYSTEM_FPM_IDENTITY,
+                'user' => 'vagrant',
+                'group' => 'vagrant',
+                'listen' => '127.0.0.1:%%%PORT%%%',
+                'pm' => Fpm::ONDEMAND,
+                'maxChildren' => 2,
+                'version' => self::VERSION,
+            ]
+
+        );
     }
 }

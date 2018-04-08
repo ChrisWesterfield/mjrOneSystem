@@ -129,6 +129,7 @@ class Statsd extends ProcessAbstract implements ProcessInterface
                 'type'=>'Proxy',
                 'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
                 'category'=>Site::CATEGORY_ADMIN,
+                'description'=>'StatsD UI'
             ]
         );
         $this->getConfig()->getSites()->set($site->getMap(),$site);

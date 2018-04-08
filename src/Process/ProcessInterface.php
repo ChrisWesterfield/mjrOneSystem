@@ -63,6 +63,7 @@ interface ProcessInterface
     public const SUPERVISOR_D = self::VAGRANT_ETC.'/supervisor';
     public const UPD_ALT = '/usr/sbin/update-alternatives';
     public const VAGRANT_SYSTEM = self::VAGRANT_HOME.'/system';
+    public const FIND = '/usr/bin/find';
 
     /**
      * @param SystemConfig $config

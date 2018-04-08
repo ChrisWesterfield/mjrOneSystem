@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
+
 namespace App\Process;
+
 use App\System\Config\Fpm;
 use App\System\Config\Site;
 
@@ -17,8 +19,8 @@ class BeanstalkedAdmin extends ProcessAbstract implements ProcessInterface
     ];
     public const SOFTWARE = [
     ];
-    public const HOME = self::VAGRANT_USER_DIR.'/beanstalkd';
-    public const COMMAND_INSTALL = self::COMPOSER.' create-project ptrofimov/beanstalk_console '.self::HOME;
+    public const HOME = self::VAGRANT_USER_DIR . '/beanstalkd';
+    public const COMMAND_INSTALL = self::COMPOSER . ' create-project ptrofimov/beanstalk_console ' . self::HOME;
     public const CONFIG = '<?php
 \$GLOBALS[\'config\'] = array(
     /**
@@ -62,19 +64,19 @@ class BeanstalkedAdmin extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             $this->execute(self::COMMAND_INSTALL);
             $this->progBarAdv(15);
-            file_put_contents(self::HOME.'/config.php',self::CONFIG);
+            file_put_contents(self::HOME . '/config.php', self::CONFIG);
             $this->progBarAdv(5);
             $this->getConfig()->addFeature(get_class($this));
             $this->progBarFin();
         }
     }
+
     /**
      *
      */
     public function uninstall(): void
     {
-        if(file_exists(self::INSTALLED_APPS_STORE.self::VERSION_TAG))
-        {
+        if (file_exists(self::INSTALLED_APPS_STORE . self::VERSION_TAG)) {
             $this->progBarInit(55);
             $this->checkUninstall(get_class($this));
             $this->progBarAdv(5);
@@ -82,18 +84,16 @@ class BeanstalkedAdmin extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             $this->uninstallPackages(self::SOFTWARE);
             $this->progBarAdv(5);
-            unlink(self::INSTALLED_APPS_STORE.self::VERSION_TAG);
+            unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
-            $this->execute(self::RM.' -Rf '.self::HOME);
+            $this->execute(self::RM . ' -Rf ' . self::HOME);
             $this->progBarAdv(25);
             $this->getConfig()->removeFeature(get_class($this));
-            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
-            {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
+            if ($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN . $this->getConfig()->getName())) {
+                $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
             }
-            if($this->getConfig()->getFpm()->containsKey(self::FPM_IDENTITY))
-            {
-                $listen = explode(':',$this->getConfig()->getFpm()->get(self::FPM_IDENTITY));
+            if ($this->getConfig()->getFpm()->containsKey(self::FPM_IDENTITY)) {
+                $listen = explode(':', $this->getConfig()->getFpm()->get(self::FPM_IDENTITY));
                 $port = (int)$listen[1];
                 $this->getConfig()->getUsedPorts()->removeElement($port);
                 $this->getConfig()->getFpm()->remove(self::FPM_IDENTITY);
@@ -107,40 +107,24 @@ class BeanstalkedAdmin extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        $port = 9001;
-        for($i=9001; $i<20000; $i++)
-        {
-            if(!$this->getConfig()->getUsedPorts()->contains($i))
-            {
-                $port = $i;
-            }
-        }
-        if($i>19999)
-        {
-            $this->getOutput()->writeln('no available Ports left!');
-        }
-        $this->getConfig()->getUsedPorts()->add($i);
-        $fpm = new Fpm(
+        $this->addSite(
             [
-                'name'=> self::FPM_IDENTITY,
-                'user'=>'vagrant',
-                'group'=>'vagrant',
-                'listen'=>'127.0.0.1:'.$i,
-                'pm'=>Fpm::ONDEMAND,
-                'maxChildren'=>2,
+                'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
+                'type' => 'PhpApp',
+                'to' => self::HOME,
+                'fpm' => true,
+                'zRay' => false,
+                'category' => Site::CATEGORY_ADMIN,
+                'description' => 'BeanstalkD Administration'
+            ],
+            [
+                'name' => self::FPM_IDENTITY,
+                'user' => 'vagrant',
+                'group' => 'vagrant',
+                'listen' => '127.0.0.1:%%%PORT%%%',
+                'pm' => Fpm::ONDEMAND,
+                'maxChildren' => 2,
             ]
         );
-        $this->getConfig()->getFpm()->set($fpm->getName(),$fpm);
-        $site = new Site(
-            [
-                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
-                'type'=>'PhpApp',
-                'to'=>self::HOME,
-                'fpm'=>$fpm->getName(),
-                'zRay'=>false,
-                'category'=>Site::CATEGORY_ADMIN,
-            ]
-        );
-        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

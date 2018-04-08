@@ -195,7 +195,7 @@ class SystemConfig
             {
                 foreach($config['fpm'] as $fpm)
                 {
-                    if(is_array($database))
+                    if(is_array($fpm))
                     {
                         $proc = new Fpm($fpm);
                         $this->fpm->set($proc->getName(),$proc);
@@ -209,7 +209,7 @@ class SystemConfig
             {
                 foreach($config['sites'] as $site)
                 {
-                    if(is_array($database))
+                    if(is_array($site))
                     {
                         $s = new Site($site);
                         $this->sites->set($s->getMap(),$s);
@@ -436,7 +436,7 @@ class SystemConfig
      */
     public function getMemory(): string
     {
-        return $this->memory;
+        return (string)$this->memory;
     }
 
     /**
@@ -445,7 +445,7 @@ class SystemConfig
      */
     public function setMemory(string $memory): SystemConfig
     {
-        $this->memory = $memory;
+        $this->memory = (int)$memory;
         return $this;
     }
 
@@ -454,7 +454,7 @@ class SystemConfig
      */
     public function getCpus(): string
     {
-        return $this->cpus;
+        return (string)$this->cpus;
     }
 
     /**
@@ -463,7 +463,7 @@ class SystemConfig
      */
     public function setCpus(string $cpus): SystemConfig
     {
-        $this->cpus = $cpus;
+        $this->cpus = (int)$cpus;
         return $this;
     }
 

@@ -40,6 +40,15 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
         'Symfony4'=>Symfony4::class,
         'Xhgui'=> Xhgui::class,
     ];
+    public const VERSION_TAG = 'NginX Site Generator';
+    public const DEFAULT_NGINX = '
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	server_name _;
+	return 301 https://\$host\$request_uri;
+}
+    ';
 
     /**
      * @return void
@@ -61,6 +70,10 @@ class WebSitesNginx extends ProcessAbstract implements ProcessInterface
     public function configure(): void
     {
         /** @var ArrayCollection|Site[] $sites */
+        $this->execute(self::SUDO.' '.self::FIND.' '.SiteBaseAbstract::SITES_AVAILABLE.'  -type f -exec rm -f {} +');
+        $this->execute(self::SUDO.' '.self::FIND.' '.SiteBaseAbstract::SITES_ENABLED.'  -type f -exec rm -f {} +');
+        $this->execute('echo "'.self::DEFAULT_NGINX.'" | '.self::SUDO.' '.self::TEE.' '.SiteBaseAbstract::SITES_AVAILABLE.'default.vhost');
+        $this->createLink(SiteBaseAbstract::SITES_AVAILABLE.'default.vhost', SiteBaseAbstract::SITES_ENABLED.'default.vhost');
         $sites = $this->getConfig()->getSites();
         if($sites->count() > 0)
         {

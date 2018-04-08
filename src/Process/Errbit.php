@@ -219,14 +219,12 @@ EMAIL_DELIVERY_METHOD=":smtp"
      */
     public function configure(): void
     {
-        $site = new Site(
-            [
-                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
-                'type'=>'Errbit',
-                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
-                'category'=>Site::CATEGORY_ADMIN,
-            ]
-        );
-        $this->getConfig()->getSites()->set($site->getMap(),$site);
+        $this->addSite([
+            'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+            'type'=>'Errbit',
+            'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+            'category'=>Site::CATEGORY_ADMIN,
+            'description'=>'Errbit Error Tracker'
+        ]);
     }
 }

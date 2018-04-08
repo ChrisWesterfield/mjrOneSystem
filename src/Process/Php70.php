@@ -174,38 +174,25 @@ class Php70 extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        $port = 9001;
-        for ($i = 9001; $i < 20000; $i++) {
-            if (!$this->getConfig()->getUsedPorts()->contains($i)) {
-                $port = $i;
-            }
-        }
-        if ($i > 19999) {
-            $this->getOutput()->writeln('no available Ports left!');
-        }
-        $this->getConfig()->getUsedPorts()->add($i);
-        $fpm = new Fpm(
+        $this->addSite(
+            [
+                'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
+                'type' => 'PhpApp',
+                'to' => self::VAGRANT_SYSTEM . '/public/' . self::VERSION,
+                'fpm' => true,
+                'zRay' => false,
+                'category' => Site::CATEGORY_INFO,
+                'description'=>'Php 7.0 Info Page',
+            ],
             [
                 'name' => self::FPM_IDENTITY,
                 'user' => 'vagrant',
                 'group' => 'vagrant',
-                'listen' => '127.0.0.1:' . $i,
+                'listen' => '127.0.0.1:%%%PORT%%%',
                 'pm' => Fpm::ONDEMAND,
                 'maxChildren' => 2,
                 'version' => self::VERSION,
             ]
         );
-        $this->getConfig()->getFpm()->set($fpm->getName(), $fpm);
-        $site = new Site(
-            [
-                'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
-                'type' => 'PhpApp',
-                'to' => self::VAGRANT_SYSTEM . '/public/' . self::VERSION,
-                'fpm' => $fpm->getName(),
-                'zRay' => false,
-                'category' => Site::CATEGORY_INFO,
-            ]
-        );
-        $this->getConfig()->getSites()->set($site->getMap(), $site);
     }
 }

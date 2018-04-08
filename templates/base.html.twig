@@ -1,12 +1,153 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Mjr!One Vagrant Environment</title>
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('assets/css/bootstrap-reboot.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/bootstrap.min.cs') }}s" rel="stylesheet">
+        <link href="{{ asset('assets/css/bootstrap-grid.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+        <style>
+{% block style %}{% endblock %}
+        </style>
     </head>
+
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ path('index') }}">
+            <img src="{{ asset('assets/images/logo.png') }}" style="height: 45px;float: inherit;">
+        </a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ path('index') }}">
+            <h4>Vagrant Development Environment {{ version }}</h4>
+        </a>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" style="display: none">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="https://github.com/ChrisWesterfield/devEnvironment/tree/master">Project Page</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    {% set sites=getSites() %}
+                    {% if sites.app|length > 0 %}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Applications</span>
+                        </h6>
+                        <ul class="nav flex-column">
+                            {% for site in sites.app %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ site.url }}" target="_blank">
+                                        {{ site.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if sites.admin|length > 0 %}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Administration</span>
+                        </h6>
+                        <ul class="nav flex-column">
+                            {% for site in sites.admin %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ site.url }}" target="_blank">
+                                        {{ site.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if sites.info|length > 0 %}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Informations</span>
+                        </h6>
+                        <ul class="nav flex-column">
+                            {% for site in sites.info %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ site.url }}">
+                                        {{ site.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if sites.stats|length > 0 %}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>Statistics</span>
+                        </h6>
+                        <ul class="nav flex-column">
+                            {% for site in sites.stats %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ site.url }}" target="_blank">
+                                        {{ site.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if sites.ext|length > 0 %}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>external</span>
+                        </h6>
+                        <ul class="nav flex-column">
+                            {% for site in sites.ext %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ site.url }}" target="_blank">
+                                        {{ site.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if sites.other|length > 0 %}
+                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                            <span>others</span>
+                        </h6>
+                        <ul class="nav flex-column">
+                            {% for site in sites.other %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ site.url }}" target="_blank">
+                                        {{ site.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+
+    <footer class="blog-footer">
+
+    </footer>
+
+        <div>
+            <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+            <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+        </div>
     </body>
 </html>

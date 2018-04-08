@@ -89,32 +89,32 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @var string|null
      */
-    protected $fcgiBufferSize;
+    protected $fcgiBufferSize='16k';
 
     /**
      * @var string|null
      */
-    protected $fcgiBuffer;
+    protected $fcgiBuffer='4 16k';
 
     /**
      * @var int|null
      */
-    protected $fcgiConnectionTimeOut;
+    protected $fcgiConnectionTimeOut=300;
 
     /**
      * @var int|null
      */
-    protected $fcgiSendTimeOut;
+    protected $fcgiSendTimeOut=300;
 
     /**
      * @var int|null
      */
-    protected $fcgiReadTimeOut;
+    protected $fcgiReadTimeOut=300;
 
     /**
      * @var string|null
      */
-    protected $fcgiBusyBufferSize;
+    protected $fcgiBusyBufferSize='64k';
 
     /**
      * @var string

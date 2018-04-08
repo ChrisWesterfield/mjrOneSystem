@@ -109,6 +109,7 @@ abstract class SiteBaseAbstract extends ProcessAbstract implements ProcessInterf
             if($fpmd->getPort() > 0)
             {
                 $vars['listen'] = $fpmd->getListen().':'.$fpmd->getPort();
+                $vars['listen'] = str_replace(':'.$fpmd->getPort().':'.$fpmd->getPort(),':'.$fpmd->getPort(), $vars['listen']);
             }
             else
             {

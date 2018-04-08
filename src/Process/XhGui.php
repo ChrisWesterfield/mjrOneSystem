@@ -14,8 +14,8 @@ class XhGui extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [
         Php72::class,
-        MongoDbPhp::class,
         Mongo::class,
+        MongoDbPhp::class,
         Tideways::class,
     ];
     public const COMMANDS = [
@@ -96,40 +96,24 @@ class XhGui extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        $port = 9001;
-        for($i=9001; $i<20000; $i++)
-        {
-            if(!$this->getConfig()->getUsedPorts()->contains($i))
-            {
-                $port = $i;
-            }
-        }
-        if($i>19999)
-        {
-            $this->getOutput()->writeln('no available Ports left!');
-        }
-        $this->getConfig()->getUsedPorts()->add($i);
-        $fpm = new Fpm(
+        $this->addSite(
+            [
+                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+                'type'=>'Xhgui',
+                'to'=>self::APP_DIR.'/webroot',
+                'fpm'=>true,
+                'zRay'=>false,
+                'category'=>Site::CATEGORY_ADMIN,
+                'description'=>'XHGUI Profiler UI'
+            ],
             [
                 'name'=> self::FPM_IDENTITY,
                 'user'=>'vagrant',
                 'group'=>'vagrant',
-                'listen'=>'127.0.0.1:'.$i,
+                'listen'=>'127.0.0.1:%%%PORT%%%',
                 'pm'=>Fpm::ONDEMAND,
                 'maxChildren'=>2,
             ]
         );
-        $this->getConfig()->getFpm()->set($fpm->getName(),$fpm);
-        $site = new Site(
-            [
-                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
-                'type'=>'Xhgui',
-                'to'=>self::APP_DIR,
-                'fpm'=>$fpm->getName(),
-                'zRay'=>false,
-                'category'=>Site::CATEGORY_ADMIN,
-            ]
-        );
-        $this->getConfig()->getSites()->set($site->getMap(),$site);
     }
 }

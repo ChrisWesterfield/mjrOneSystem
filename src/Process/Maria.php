@@ -24,7 +24,7 @@ class Maria extends ProcessAbstract implements ProcessInterface
         self::SUDO . ' ' . self::APT . ' update ',
         self::SUDO.' /bin/bash /home/vagrant/base/system/bin/mariadb.install.bash',
         self::SUDO . ' ' . self::SED . '  -i \'/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/\' /etc/mysql/my.cnf',
-        'mysql --user="root" --password="123" -e "GRANT ALL ON *.* TO root@\'0.0.0.0\' IDENTIFIED BY \'123\' WITH GRANT OPTION;"',
+        'mysql --user="root" --password="123" -e "GRANT ALL ON *.* TO \'root\'@\'0.0.0.0\' IDENTIFIED BY \'123\' WITH GRANT OPTION;"',
         self::SUDO . ' ' . self::SERVICE_CMD . ' mysql ' . self::SERVICE_RESTART,
         'mysql --user="root" --password="123" -e "CREATE USER \'application\'@\'%\' IDENTIFIED BY \'123\';"',
         'mysql --user="root" --password="123" -e "FLUSH PRIVILEGES;"',
@@ -47,34 +47,6 @@ class Maria extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             foreach (self::COMMANDS as $COMMAND) {
                 $this->execute($COMMAND);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php56::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php56::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php70::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php70::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php71::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php71::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php72::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' install -y php'.Php72::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
                 $this->progBarAdv(5);
             }
             $this->getConfig()->addFeature(get_class($this));
@@ -108,34 +80,6 @@ class Maria extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
-            if($this->getConfig()->getFeatures()->contains(Php56::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php56::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php70::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php70::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php71::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php71::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
-            if($this->getConfig()->getFeatures()->contains(Php72::class))
-            {
-                $this->execute(self::SUDO.' '.self::APT.' purge -y php'.Php72::VERSION.'-mysql');
-                $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
-                $this->progBarAdv(5);
-            }
             $this->execute(self::SUDO.' '.self::APT.' remove mysql-* -y');
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::APT.' autoremove -y');

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @package App\Console
  * @author chris westerfield <chris@mjr.one>
  */
-class PhpFpm56 extends ContainerAwareCommand
+class PhpFpm56 extends BaseAbstract
 {
     public const NAME = 'PHP Fpm 5.6';
     public const SERVICE_CLASS = Process::class;

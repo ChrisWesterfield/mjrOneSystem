@@ -158,14 +158,12 @@ Pin-Priority: 1000';
      */
     public function configure(): void
     {
-        $site = new Site(
-            [
-                'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
-                'type'=>'Proxy',
-                'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
-                'category'=>Site::CATEGORY_ADMIN,
-            ]
-        );
-        $this->getConfig()->getSites()->set($site->getMap(),$site);
+        $this->addSite([
+            'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+            'type'=>'Proxy',
+            'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
+            'category'=>Site::CATEGORY_ADMIN,
+            'description'=>'RabbitMQ Admin'
+        ]);
     }
 }
