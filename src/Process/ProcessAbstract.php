@@ -185,6 +185,7 @@ abstract class ProcessAbstract
     {
         if(!empty($list))
         {
+            $this->getOutput()->writeln('<comment>Checking Dependencies</comment>');
             foreach($list as $item)
             {
                 if(empty($item))
@@ -194,6 +195,7 @@ abstract class ProcessAbstract
                 /** @var ProcessInterface|Ant $class */
                 if(!file_exists(ProcessInterface::INSTALLED_APPS_STORE.$item::VERSION_TAG))
                 {
+                    $this->printOutput("\n".'<info>Installing Dependency '.$item.'</info>',1);
                     /** @var ProcessInterface $instance */
                     $instance = new $item();
                     $instance->setOutput($this->getOutput());
@@ -201,6 +203,7 @@ abstract class ProcessAbstract
                     $instance->setIo($this->getIo());
                     $instance->install();
                     $instance->configure();
+                    $this->printOutput('done',1);
                 }
                 $this->getConfig()->addRequirement(get_class($this), $item);
             }

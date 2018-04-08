@@ -122,6 +122,11 @@ class Site extends ConfigAbstract implements ConfigInterface
     protected $category = self::CATEGORY_APP;
 
     /**
+     * @var string|null
+     */
+    protected $listen;
+
+    /**
      * Site constructor.
      * @param array $config
      */
@@ -132,6 +137,24 @@ class Site extends ConfigAbstract implements ConfigInterface
                 $this->{$id} = $item;
             }
         }
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getListen(): ?string
+    {
+        return $this->listen;
+    }
+
+    /**
+     * @param null|string $listen
+     * @return Site
+     */
+    public function setListen(?string $listen): Site
+    {
+        $this->listen = $listen;
+        return $this;
     }
 
     /**
@@ -446,7 +469,7 @@ class Site extends ConfigAbstract implements ConfigInterface
     /**
      * @return string
      */
-    public function getTo(): string
+    public function getTo():?string
     {
         return $this->to;
     }

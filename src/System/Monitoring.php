@@ -18,11 +18,7 @@ class Monitoring
      * @var array
      */
     protected $httpPorts = [
-        80,
         81,
-        8080,
-        8025,
-        8030,
     ];
 
     /**

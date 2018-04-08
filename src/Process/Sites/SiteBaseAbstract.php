@@ -115,6 +115,11 @@ abstract class SiteBaseAbstract extends ProcessAbstract implements ProcessInterf
             {
                 $vars['listen'] = 'unix:'.$fpmd->getListen();
             }
+        }else{
+            if($site->getListen()!==null)
+            {
+                $vars['listen'] = $site->getListen();
+            }
         }
         if(get_class($this)===Statsd::class)
         {
