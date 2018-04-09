@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2">Process List</h1>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Command</th>
+                    <th>PID</th>
+                    <th>parent PID</th>
+                    <th>Start Time</th>
+                    <th>CPU Time</th>
+                    <th>User</th>
+                    <th>Command Line</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proc in processes %}
+                    <tr>                <td>{{ proc.command }}</td>
+
+                        <td>{{ proc.processId }}</td>
+                        <td>{{ proc.parentProcessId }}</td>
+                        <td>{{ proc.startTime }}</td>
+                        <td>{{ proc.cpuTime }}</td>
+                        <td>{{ proc.user }}</td>
+                        <td>{{ proc.commandLine }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Console;
 use App\Process\Apache2;
 use App\Process\Nginx;
+use App\Process\ProcessHostsFile;
 use App\Process\WebSitesApache;
 use App\Process\WebSitesNginx;
 use App\System\SystemConfig;
@@ -57,5 +58,13 @@ class SiteConfig extends ContainerAwareCommand
             $inst->configure();
             $output->writeln('configuring nginx done');
         }
+        $output->writeln('configuring hostsfile');
+        $inst = new ProcessHostsFile();
+        $inst->setIo(new SymfonyStyle($input, $output));
+        $inst->setConfig(SystemConfig::get());
+        $inst->setOutput($output);
+        $inst->setContainer($this->getContainer());
+        $inst->configure();
+        $output->writeln('configuring hostsfile done');
     }
 }

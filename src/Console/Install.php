@@ -10,6 +10,7 @@ namespace App\Console;
 
 
 use App\Process\PhpFpmSites;
+use App\Process\ProcessHostsFile;
 use App\Process\ProcessInterface;
 use App\Process\WebSitesApache;
 use App\Process\WebSitesNginx;
@@ -71,7 +72,8 @@ class Install extends ContainerAwareCommand
         $instance->configure();
         $instance = $this->getInstance(PhpFpmSites::class, $config, $style, $output);
         $instance->configure();
-
+        $instance = $this->getInstance(ProcessHostsFile::class, SystemConfig::get(), $style, $output);
+        $instance->configure();
     }
 
     protected function getInstance(string $class, SystemConfig $config, SymfonyStyle $style, OutputInterface $output):ProcessInterface
