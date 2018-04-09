@@ -185,7 +185,7 @@ abstract class ProcessAbstract
     {
         if(!empty($list))
         {
-            $this->getOutput()->writeln('<comment>Checking Dependencies</comment>');
+            $this->progBarMessage('Checking Dependencies');
             foreach($list as $item)
             {
                 if(empty($item))
@@ -195,7 +195,7 @@ abstract class ProcessAbstract
                 /** @var ProcessInterface|Ant $class */
                 if(!file_exists(ProcessInterface::INSTALLED_APPS_STORE.$item::VERSION_TAG))
                 {
-                    $this->printOutput("\n".'<info>Installing Dependency '.$item.'</info>',1);
+                    $this->progBarMessage('Installing Dependency '.$item.'');
                     /** @var ProcessInterface $instance */
                     $instance = new $item();
                     $instance->setOutput($this->getOutput());
@@ -204,9 +204,11 @@ abstract class ProcessAbstract
                     $instance->install();
                     $instance->configure();
                     $this->printOutput('done',1);
+                    $this->progBarMessage('Checking Dependencies');
                 }
                 $this->getConfig()->addRequirement(get_class($this), $item);
             }
+            $this->progBarMessage();
         }
     }
 
@@ -216,8 +218,13 @@ abstract class ProcessAbstract
     public function progBarInit(int $maxValue = 100):void
     {
         $maxValue/=5;
-        $this->pb = $this->getIo()->createProgressBar($maxValue);
-        $this->pb->setFormat('normal');
+        $this->pb = $this->getIo()->createProgressBar();
+        $this->pb->setMessage('');
+        $this->pb->setFormat('MJR!ONE: %current% [%bar%]  %elapsed:6s% (Memory Usage: %memory:6s%) %message%');
+        $this->pb->setEmptyBarCharacter('░'); // light shade character \u2591
+        $this->pb->setProgressCharacter('');
+        $this->pb->setBarCharacter('<info>█</info>'); // dark shade character \u2593
+        $this->pb->setBarWidth(40);
     }
 
     /**
@@ -229,6 +236,14 @@ abstract class ProcessAbstract
         if($this->pb instanceof ProgressBar)
         {
             $this->pb->advance($steps);
+        }
+    }
+
+    public function progBarMessage(string $message=''):void
+    {
+        if($this->pb instanceof ProgressBar)
+        {
+            $this->pb->setMessage($message);
         }
     }
 

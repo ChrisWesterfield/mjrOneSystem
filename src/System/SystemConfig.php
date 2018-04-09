@@ -17,7 +17,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class SystemConfig
 {
-    protected const CONFIG_FILE=__DIR__.'/../../../etc/config.yaml';
+    protected const CONFIG_FILE='/home/vagrant/base/etc/config.yaml';
 
     /**
      * @var SystemConfig

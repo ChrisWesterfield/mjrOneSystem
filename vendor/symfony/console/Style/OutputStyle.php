@@ -81,7 +81,8 @@ abstract class OutputStyle implements OutputInterface, StyleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@in
+     * heritdoc}
      */
     public function setDecorated($decorated)
     {
