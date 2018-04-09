@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class Cockpit extends BaseAbstract
 {
-    public const NAME = 'Zray';
+    public const NAME = 'Cockpit';
     public const SERVICE_CLASS = Process::class;
     public const ADD_SITE = true;
     /**
