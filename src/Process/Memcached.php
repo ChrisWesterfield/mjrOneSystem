@@ -10,6 +10,7 @@ namespace App\Process;
 class Memcached extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Memcached Server';
     public const SOFTWARE = [
         'memcached',
         'php-memcached',
@@ -37,6 +38,15 @@ class Memcached extends ProcessAbstract implements ProcessInterface
         'cd '.self::PHP_LIB_DIR.' && ' . self::SUDO.' /usr/bin/make ',
         'cd '.self::PHP_LIB_DIR.' && ' . self::SUDO.' /usr/bin/make install ',
     ];
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
+
     /**
      * @return void
      */

@@ -13,6 +13,7 @@ use App\System\Config\Site;
 class Cockpit extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Administration UI';
     public const SOFTWARE = [
         'cockpit',
         'cockpit-bridge',
@@ -26,6 +27,14 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
     public const VERSION_TAG = 'cockpit';
     public const SUBDOMAIN = 'cockpit.';
     public const DEFAULT_PORT = 7777;
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

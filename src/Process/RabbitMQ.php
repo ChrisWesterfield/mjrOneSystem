@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class RabbitMQ extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Queue Server';
     public const REQUIREMENTS = [
         Php72::class,
     ];
@@ -34,6 +35,14 @@ Pin-Priority: 1000';
     public const SUBDOMAIN = 'rmqa.';
     public const DEFAULT_PORT = 5672;
     public const DEFAULT_PORT_ADMIN = 15672;
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
     /**
      * @return void
      */

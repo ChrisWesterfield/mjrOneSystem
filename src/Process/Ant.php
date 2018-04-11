@@ -21,6 +21,7 @@ class Ant extends ProcessAbstract implements ProcessInterface
         Java::class,
     ];
     public const VERSION_TAG = 'ant';
+    public const DESCRIPTION = 'Ant Build System';
 
     /**
      *

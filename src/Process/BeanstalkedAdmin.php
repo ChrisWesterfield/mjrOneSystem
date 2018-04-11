@@ -13,6 +13,7 @@ use App\System\Config\Site;
  */
 class BeanstalkedAdmin extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Beanstalkd Admin UI';
     public const REQUIREMENTS = [
         Beanstalked::class,
         Composer::class,

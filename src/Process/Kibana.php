@@ -12,6 +12,7 @@ use App\System\Config\Site;
  */
 class Kibana extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Elastic Search Visualisation Tools';
     public const REQUIREMENTS = [
         Java::class,
     ];
@@ -48,6 +49,14 @@ class Kibana extends ProcessAbstract implements ProcessInterface
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
     }
 
     /**

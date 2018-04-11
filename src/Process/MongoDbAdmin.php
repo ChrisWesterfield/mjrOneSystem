@@ -16,6 +16,7 @@ class MongoDbAdmin extends ProcessAbstract implements ProcessInterface
         MongoDbPhp::class,
         Mongo::class,
     ];
+    public const DESCRIPTION = 'Mongo DB Admin Ui';
     public const SOFTWARE = [];
     public const APP_DIR = '/home/vagrant/phppma';
     public const COMMAND = self::GIT_CLONE.' https://github.com/jwage/php-mongodb-admin.git '.self::APP_DIR;

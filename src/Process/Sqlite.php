@@ -10,6 +10,7 @@ namespace App\Process;
  */
 class Sqlite extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'SQLite Environment';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'sqlite3',

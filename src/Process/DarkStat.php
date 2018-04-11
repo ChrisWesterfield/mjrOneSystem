@@ -11,6 +11,7 @@ use App\System\Config\Site;
 class DarkStat extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Traffic Statistic Tool';
     public const SOFTWARE = [
         'darkstat'
     ];
@@ -45,6 +46,15 @@ DAYLOG=\"--daylog darkstat.log\"
      * @return void
      */
     public const SUBDOMAIN = 'darkstat.';
+
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     public function install(): void
     {

@@ -9,6 +9,8 @@ namespace App\Process;
  */
 class Python extends ProcessAbstract implements ProcessInterface
 {
+
+    public const DESCRIPTION = 'Python Development Environment';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'python-virtualenv',

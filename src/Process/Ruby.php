@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Ruby extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Ruby Development Environment';
     public const SOFTWARE = [
         'ruby',
         'ruby-dev'

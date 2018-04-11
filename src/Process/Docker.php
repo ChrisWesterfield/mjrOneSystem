@@ -10,6 +10,7 @@ namespace App\Process;
 class Docker extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Docker Daemon and Tools';
     public const SOFTWARE = [
         'docker-ce'
     ];
@@ -30,6 +31,14 @@ class Docker extends ProcessAbstract implements ProcessInterface
         self::SUDO.' '.self::CHMOD.' +x '.self::DOCKER_CHTOP,
     ];
     public const VERSION_TAG = 'docker';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
     /**
      * @return void
      */

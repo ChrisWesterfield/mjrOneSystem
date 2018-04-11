@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class OhMyZsh extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'ZSH ';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'zsh'

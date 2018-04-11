@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Xdebug extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'PHP Extension';
     public const XDEBUG_PORT = 9000;
     public const REQUIREMENTS = [
         Php72::class,

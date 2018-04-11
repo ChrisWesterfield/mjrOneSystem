@@ -14,6 +14,7 @@ use App\System\Config\Site;
  */
 class PhpMysql extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'PHP MySQL Extension';
     public const SOFTWARE = [
         'openjdk-8-jre-headless',
         'openjdk-8-jdk-headless',

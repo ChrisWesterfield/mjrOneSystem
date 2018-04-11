@@ -11,6 +11,7 @@ namespace App\Process;
 class Apache2 extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Apache2 Web Server';
     public const SOFTWARE = [
         'apache2',
         'apache2-bin',
@@ -255,6 +256,14 @@ Listen '.self::DEFAULT_PORT.'
 	GnuTLSPriorities NORMAL 
 </VirtualHost> 
 </IfModule>';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

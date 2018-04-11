@@ -11,6 +11,7 @@ namespace App\Process;
 
 class phpShell extends ProcessAbstract implements ProcessInterface
 {
+    public const EXCLUDE = true;
     public const PHP_CMD = '/usr/bin/php%s';
     public const COMMAND = self::SUDO.' '.self::UPD_ALT.' --set php %s';
     /**

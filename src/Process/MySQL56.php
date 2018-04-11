@@ -11,6 +11,7 @@ namespace App\Process;
 class MySQL56 extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Sql Dataabse Server by Oracle';
     public const SOFTWARE = [
         'mysql-community-client',
         'mysql-community-server',
@@ -58,6 +59,14 @@ Pin-Priority: 1001';
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART);
     }
 
     /**

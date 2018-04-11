@@ -12,6 +12,7 @@ class MongoDbPhp extends ProcessAbstract implements ProcessInterface
     public const REQUIREMENTS = [
         Php72::class,
     ];
+    public const DESCRIPTION = 'Mongo DB PHP Extension';
     public const SOFTWARE = [
         'php-mongo',
         'php-mongodb',

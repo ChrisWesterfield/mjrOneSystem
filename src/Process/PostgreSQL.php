@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class PostgreSQL extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Postgresql SQL Server';
     public const BIN_PSQL = '/usr/bin/psql';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
@@ -23,6 +24,14 @@ class PostgreSQL extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'postgresql';
     public const DEFAULT_PORT = 5432;
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
     /**
      * @return void
      */

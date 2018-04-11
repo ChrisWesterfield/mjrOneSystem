@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Statsd extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Performance Monitoring Toolkit';
     public const REQUIREMENTS = [
         NodeJs::class,
         Python::class,

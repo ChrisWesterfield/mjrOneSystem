@@ -10,6 +10,7 @@ use App\System\Config\Site;
  */
 class Errbit extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Error Tracking for Web Applications';
     public const SUBDOMAIN = 'errbit.';
     public const HOME = '/home/vagrant/errbit';
     public const LOG_FILE = self::HOME.'/errbit.install.log';
@@ -106,6 +107,14 @@ EMAIL_DELIVERY_METHOD=":smtp"
         Mongo::class,
     ];
     public const VERSION_TAG = 'errbit';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

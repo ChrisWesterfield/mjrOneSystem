@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Ssl extends ProcessAbstract implements ProcessInterface
 {
+    public const EXCLUDE = true;
     public const PATH_CA_DIR = '/home/vagrant/base/etc/ssl/';
     public const PATH_SSL_DIR = '/etc/ssl/private/';
     public const CA_CERT = [

@@ -13,6 +13,7 @@ use App\System\Config\Site;
  */
 class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Database Administration Tools';
     public const REQUIREMENTS = [
         Php72::class,
         Composer::class,
@@ -24,9 +25,9 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
         self::GIT_CLONE . ' https://github.com/phpmyadmin/phpmyadmin.git ' . self::APP_DIR,
         'cd ' . self::APP_DIR . ' && git checkout RELEASE_4_7_9 ',
         self::COMPOSER.' install -vvv --profile -d '.self::APP_DIR,
-        'cd '.self::APP_DIR.'/temes && '.self::WGET .' https://files.phpmyadmin.net/themes/fallen/0.5/fallen-0.5.zip',
-        'cd '.self::APP_DIR.'/temes && unzip fallen-0.5.zip',
-        'cd '.self::APP_DIR.'/temes && '.self::RM.' -f fallen-0.5.zip',
+        'cd '.self::APP_DIR.'/themes && '.self::WGET .' https://files.phpmyadmin.net/themes/fallen/0.5/fallen-0.5.zip',
+        'cd '.self::APP_DIR.'/themes && unzip fallen-0.5.zip',
+        'cd '.self::APP_DIR.'/themes && '.self::RM.' -f fallen-0.5.zip',
     ];
     public const VERSION_TAG = 'phpmyadmin';
     public const FPM_IDENTITY = 'admin.phpmyadmin';
@@ -132,8 +133,8 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
                 $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
             }
             if ($this->getConfig()->getFpm()->containsKey(self::FPM_IDENTITY)) {
-                $listen = explode(':', $this->getConfig()->getFpm()->get(self::FPM_IDENTITY));
-                $port = (int)$listen[1];
+                $fpm = $this->getConfig()->getFpm()->get(self::FPM_IDENTITY);
+                $port = $fpm->getPort();
                 $this->getConfig()->getUsedPorts()->removeElement($port);
                 $this->getConfig()->getFpm()->remove(self::FPM_IDENTITY);
             }

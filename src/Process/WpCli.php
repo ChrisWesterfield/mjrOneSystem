@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class WpCli extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Wordpress CLI Tools';
     public const REQUIREMENTS = [
     ];
     public const SOFTWARE = [];

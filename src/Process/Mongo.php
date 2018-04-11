@@ -10,6 +10,7 @@ namespace App\Process;
 class Mongo extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'NoSQL Database Server';
     public const ALTERNATIVE_MODE = true;
     public const COMMANDS = [
         self::SUDO . ' apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5',
@@ -28,6 +29,15 @@ class Mongo extends ProcessAbstract implements ProcessInterface
         self::SUDO . ' mongo admin --eval "db.createUser({user:\'vagrant\',pwd:\'123\',roles:[\'root\']})"',
     ];
     public const DEFAULT_PORT = 27017;
+
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.'d '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

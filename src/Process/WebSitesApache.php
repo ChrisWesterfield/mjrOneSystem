@@ -15,6 +15,7 @@ use App\System\Config\Site;
  */
 class WebSitesApache extends ProcessAbstract implements ProcessInterface
 {
+    public const EXCLUDE =  true;
     public const APACHE = [
         'apache'=>Apache::class,
         'pimcore'=> PimCore::class,

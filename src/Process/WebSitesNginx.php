@@ -26,6 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class WebSitesNginx extends ProcessAbstract implements ProcessInterface
 {
+    public const EXCLUDE =  true;
     public const NGINX = [
         'Elgg'=>Elgg::class,
         'Errbit'=> Errbit::class,
@@ -107,6 +108,10 @@ server {
             }
             $this->progBarFin();
         }
-        $this->execute(self::SERVICE_CMD.' '.Nginx::SERVICE_NAME.' '.self::SERVICE_RESTART);
+
+        if(!defined('POST_PONE_RELOAD') || POST_PONE_RELOAD!==true)
+        {
+            $this->execute(self::SERVICE_CMD.' '.Nginx::SERVICE_NAME.' '.self::SERVICE_RESTART);
+        }
     }
 }

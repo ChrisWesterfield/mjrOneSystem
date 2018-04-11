@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Redis extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'NoSQL Server';
     public const REQUIREMENTS = [
         Php72::class,
     ];
@@ -20,6 +21,14 @@ class Redis extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'redis';
     public const DEFAULT_PORT = 6379;
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.'-server '.self::SERVICE_RESTART);
+    }
     /**
      * @return void
      */

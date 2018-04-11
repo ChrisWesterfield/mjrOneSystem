@@ -14,6 +14,7 @@ use App\System\Config\Site;
  */
 class Php70 extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'PHP Environment';
     public const VERSION = '7.0';
     public const SERVICE_NAME = 'php' . self::VERSION . '-fpm';
     public const DIR_MODS_AVAILABLE = '/etc/php/' . self::VERSION . '/mods-available/';
@@ -53,6 +54,14 @@ class Php70 extends ProcessAbstract implements ProcessInterface
     public const VERSION_TAG = 'php70';
     public const FPM_IDENTITY = 'admin.info70';
     public const SUBDOMAIN = 'info70.';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void
@@ -131,13 +140,13 @@ class Php70 extends ProcessAbstract implements ProcessInterface
             }
             $this->uninstallPackages(self::SOFTWARE);
             $this->progBarAdv(15);
-            unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
+            $this->execute(self::SUDO.' '.self::RM.' ' . self::INSTALLED_APPS_STORE. self::VERSION_TAG);
             $this->progBarAdv(5);
-            unlink(self::DIR_CONF_FPM . '20-' . self::MJRONE_FILE);
+            $this->execute(self::SUDO.' '.self::RM.' ' . self::DIR_CONF_FPM.'20-'.self::MJRONE_FILE);
             $this->progBarAdv(5);
-            unlink(self::DIR_CONF_CLI . '20-' . self::MJRONE_FILE);
+            $this->execute(self::SUDO.' '.self::RM.' ' . self::DIR_CONF_CLI.'20-'.self::MJRONE_FILE);
             $this->progBarAdv(5);
-            unlink(self::DIR_MODS_AVAILABLE . self::MJRONE_FILE);
+            $this->execute(self::SUDO.' '.self::RM.' ' . self::DIR_MODS_AVAILABLE.self::MJRONE_FILE);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
             if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))

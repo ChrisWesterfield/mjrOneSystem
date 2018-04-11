@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class FlyWay extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Flyway Database Migration Tools';
     public const REQUIREMENTS = [
         Java::class,
     ];

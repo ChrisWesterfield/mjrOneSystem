@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Hhvm extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'HipHop Virtual Machine (Facebook PHP Engine)';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'hhvm',
@@ -91,6 +92,14 @@ RUN_AS_GROUP=\"vagrant\"
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
     }
 
     /**

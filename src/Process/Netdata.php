@@ -13,6 +13,7 @@ use App\System\Config\Site;
 class Netdata extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Performance Satistik';
     public const SOFTWARE = [];
     public const COMMANDS = [
         self::SUDO . ' /bin/bash /home/vagrant/base/system/bin/netdata.install.bash',
@@ -54,6 +55,14 @@ class Netdata extends ProcessAbstract implements ProcessInterface
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
     }
 
     /**

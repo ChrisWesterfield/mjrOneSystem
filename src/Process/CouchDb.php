@@ -14,6 +14,7 @@ class CouchDb extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
     public const VERSION_TAG = 'couchdb';
+    public const DESCRIPTION = 'NoSQL Database';
     public const SOFTWARE = [
         'couchdb'
     ];
@@ -37,6 +38,15 @@ class CouchDb extends ProcessAbstract implements ProcessInterface
      */
     public const SUBDOMAIN = 'couchdb.';
     public const DEFAULT_PORT = 5984;
+
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     public function install(): void
     {

@@ -13,6 +13,7 @@ class Blackfire extends ProcessAbstract implements ProcessInterface
     public const REQUIREMENTS = [
         Php72::class,
     ];
+    public const DESCRIPTION = 'Blackfire Profiler';
     public const SOFTWARE = [
         'blackfire-agent',
         'blackfire-php',

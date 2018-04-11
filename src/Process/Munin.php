@@ -13,6 +13,7 @@ use App\System\Config\Site;
 class Munin extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Munin System Statistik Tool';
     public const SOFTWARE = [
         'munin',
         'munin-plugins-extra',
@@ -30,6 +31,14 @@ graph_strategy cron
     use_node_name yes
 ';
     public const VERSION_TAG = 'munin';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.'-node '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

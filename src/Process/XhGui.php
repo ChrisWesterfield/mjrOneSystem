@@ -14,6 +14,7 @@ use App\System\Config\Site;
  */
 class XhGui extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Tideways / XHPROF Frontend UI';
     public const REQUIREMENTS = [
         Php72::class,
         Mongo::class,

@@ -12,6 +12,7 @@ use App\System\Config\Site;
  */
 class ElasticSearch6 extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Elastic Search 6 Software';
     public const SOFTWARE = [
         'elasticsearch'
     ];
@@ -37,6 +38,14 @@ class ElasticSearch6 extends ProcessAbstract implements ProcessInterface
      *
      */
     public const SUBDOMAIN = 'es.';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     public function install(): void
     {

@@ -12,6 +12,7 @@ class Logstash extends ProcessAbstract implements ProcessInterface
     public const REQUIREMENTS = [
         Java::class,
     ];
+    public const DESCRIPTION = 'Log Aggregation Tool';
     public const SOFTWARE = [];
     public const DEB_FILE = '/home/vagrant/logstash.deb';
     public const COMMANDS = [
@@ -45,6 +46,14 @@ class Logstash extends ProcessAbstract implements ProcessInterface
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
     }
 
     /**

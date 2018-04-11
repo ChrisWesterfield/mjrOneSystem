@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Nginx extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Nginx Webserver';
     public const SOFTWARE = [
         'libxml2-dev',
         'libxslt1-dev',
@@ -41,6 +42,14 @@ class Nginx extends ProcessAbstract implements ProcessInterface
     public const DEFAULT_PORT = 443;
     public const DEFAULT_PORT_HTTP = 80;
 
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
     /**
      *
      */

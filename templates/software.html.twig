@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h2">Package Installer</h1>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>Package</th>
+                    <th>Description</th>
+                    <th>Requirements</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for cn,data in available %}
+                <tr>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.description }}</td>
+                    <td>
+                        {% if data.requirements|length > 0 %}
+                            <ul>
+                                {% for req in data.requirements %}
+                                    <li>{{ req }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center">
+                        {% if data.blocked %}
+                            <div class="alert alert-warning">Other Package with Simular Feature Installed!</div>
+                        {% elseif cn not in installed %}
+                            <button type="button" style="min-width: 250px;" data-href="{{ path('software_do', {'package':data.name, 'operation': 'install'}) }}" class="btn btn-success install">Install</button>
+                        {% else %}
+
+                            {% if cn in blocked %}
+                                <div class="alert alert-danger"> Can't uninstall due to requirements</div>
+                            {% else %}
+                                <button type="button" style="min-width: 250px;" data-href="{{ path('software_do', {'package': data.name, 'operation': 'uninstall'}) }}" class="btn btn-danger uninstall">Uninstall</button>
+                            {% endif %}
+                        {% endif %}
+                        {% if cn in installed %}
+                            {% if cn in restartable %}
+                                <br><a href="{{ path('software_restart', {'package':data.name}) }}" class="btn btn-warning" style="min-width: 250px;">restart</a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block onload %}
+    $('.install').click(function(){
+        var url = $(this).data('href');
+        bootbox.confirm({
+        message: "Do you really want to install this package?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if(result)
+                {
+                    window.location= url;
+                }
+            }
+        });
+    });
+    $('.uninstall').click(function(){
+        var url = $(this).data('href');
+        bootbox.confirm({
+            message: "Do you really want to uninstall this package?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if(result)
+                {
+                    window.location= url;
+                }
+            }
+        });
+    });
+{% endblock %}

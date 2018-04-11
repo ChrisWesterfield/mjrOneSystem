@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Supervisor extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Software to run Software';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'supervisor'
@@ -30,6 +31,14 @@ files = /home/vagrant/base/etc/supervisor/*.conf';
     public const CONFIG_FILE = '/etc/supervisor/supervisord.conf';
 
     public const VERSION_TAG = 'supervisor';
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
     /**
      * @return void
      */

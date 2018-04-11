@@ -21,6 +21,7 @@ class MailHog extends ProcessAbstract implements ProcessInterface
         'daemon',
         'fakeroot'
     ];
+    public const DESCRIPTION = 'Development Mail Server';
     public const REQUIREMENTS = [
         Java::class,
     ];
@@ -69,6 +70,14 @@ class MailHog extends ProcessAbstract implements ProcessInterface
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT_SMTP);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
     }
 
     public function uninstall(): void

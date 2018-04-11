@@ -11,6 +11,7 @@ namespace App\Process;
 class Maria extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'MySQL Dropin Solution';
     public const APT_FILE = '/etc/apt/sources.list.d/maria.list';
     public const SOFTWARE = [
         'mariadb-server',
@@ -53,6 +54,14 @@ class Maria extends ProcessAbstract implements ProcessInterface
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();
         }
+    }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAMEV.' '.self::SERVICE_RESTART);
     }
 
     /**

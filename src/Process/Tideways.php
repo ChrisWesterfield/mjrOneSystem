@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Tideways extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Profiler';
     public const REQUIREMENTS = [
         Php72::class,
     ];

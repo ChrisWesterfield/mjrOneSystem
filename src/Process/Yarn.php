@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Yarn extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Javascript Packaging System';
     public const REQUIREMENTS = [
         NodeJs::class,
     ];

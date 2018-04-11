@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class NodeJs extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Software development System';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'nodejs',

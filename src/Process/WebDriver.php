@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class WebDriver extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Web Driver Integration';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'libxpm4',

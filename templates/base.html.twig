@@ -34,7 +34,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('process_list') }}">Prozess Liste</a>
+                    <a class="nav-link btn btn-dark" href="{{ path('software') }}">Software Package Liste</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-dark" href="{{ path('process_list') }}">Prozess Liste</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="https://github.com/ChrisWesterfield/devEnvironment/tree/master" target="_blank">Project Page</a>
@@ -155,6 +158,12 @@
         <div>
             <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
             <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+            <script src="{{ asset('assets/js/bootbox.js') }}"></script>
+            <script>
+                $(function () {
+                    {% block onload %}{% endblock %}
+                });
+            </script>
         </div>
     </body>
 </html>

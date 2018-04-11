@@ -14,6 +14,7 @@ use App\System\SystemConfig;
 
 class PhpFpmSites extends ProcessAbstract implements ProcessInterface
 {
+    public const EXCLUDE = true;
     public const TEMPLATE = 'configuration/php/fpm.conf.twig';
     public const DELETE = self::SUDO . ' find /etc/php/%s/fpm/pool.d/ -type f -not -name \'www.conf\'  -delete';
     public const VERSION_TAG = 'PHP FPM Site Generator';
@@ -108,21 +109,24 @@ class PhpFpmSites extends ProcessAbstract implements ProcessInterface
                 }
             }
         }
-        if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
-            $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
-            $this->progBarAdv(5);
-        }
-        if ($this->getConfig()->getFeatures()->contains(Php71::class)) {
-            $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
-            $this->progBarAdv(5);
-        }
-        if ($this->getConfig()->getFeatures()->contains(Php70::class)) {
-            $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
-            $this->progBarAdv(5);
-        }
-        if ($this->getConfig()->getFeatures()->contains(Php56::class)) {
-            $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
-            $this->progBarAdv(5);
+        if(!defined('POST_PONE_RELOAD') || POST_PONE_RELOAD!==true)
+        {
+            if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
+                $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
+                $this->progBarAdv(5);
+            }
+            if ($this->getConfig()->getFeatures()->contains(Php71::class)) {
+                $this->execute(self::SERVICE_CMD.' '.Php71::SERVICE_NAME.' '.self::SERVICE_RESTART);
+                $this->progBarAdv(5);
+            }
+            if ($this->getConfig()->getFeatures()->contains(Php70::class)) {
+                $this->execute(self::SERVICE_CMD.' '.Php70::SERVICE_NAME.' '.self::SERVICE_RESTART);
+                $this->progBarAdv(5);
+            }
+            if ($this->getConfig()->getFeatures()->contains(Php56::class)) {
+                $this->execute(self::SERVICE_CMD.' '.Php56::SERVICE_NAME.' '.self::SERVICE_RESTART);
+                $this->progBarAdv(5);
+            }
         }
         $this->progBarFin();
     }

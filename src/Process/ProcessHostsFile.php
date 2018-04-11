@@ -10,6 +10,7 @@ use App\System\Config\Site;
  */
 class ProcessHostsFile extends ProcessAbstract implements ProcessInterface
 {
+    public const EXCLUDE =  true;
     public const HOSTS_FILE = "127.0.0.1	localhost\n127.0.1.1	schulung.test	schulung\n# The following lines are desirable for IPv6 capable hosts\n::1     localhost ip6-localhost ip6-loopback\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\n";
     public const FILENAME = '/etc/hosts';
     public const VERSION_TAG = 'hostFileUpdator';

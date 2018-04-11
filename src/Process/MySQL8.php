@@ -11,6 +11,7 @@ namespace App\Process;
 class MySQL8 extends ProcessAbstract implements ProcessInterface
 {
     public const REQUIREMENTS = [];
+    public const DESCRIPTION = 'Sql Databbase Server by Oracle (Beta/RC)';
     public const SOFTWARE = [
         'mysql-community-client',
         'mysql-community-server',
@@ -41,6 +42,14 @@ Pin-Priority: 1001';
     public const SERVICE_NAME = 'mysql';
     public const VERSION_TAG = 'mysql8';
     public const DEFAULT_PORT = 3306;
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

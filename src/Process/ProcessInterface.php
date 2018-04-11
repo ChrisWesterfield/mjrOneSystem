@@ -72,6 +72,11 @@ interface ProcessInterface
     public function setConfig(SystemConfig $config);
 
     /**
+     * @return void
+     */
+    public function restartService():void;
+
+    /**
      * @return SystemConfig
      */
     public function getConfig(): SystemConfig;

@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Ngrok extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Proxy developer server';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [];
     public const COMMANDS = [

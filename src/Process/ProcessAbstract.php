@@ -356,4 +356,12 @@ abstract class ProcessAbstract
             $this->getConfig()->getSites()->set($webInstance->getMap(), $webInstance);
         }
     }
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        //nothing to do
+    }
 }

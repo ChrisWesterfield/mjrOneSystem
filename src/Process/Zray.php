@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Zray extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'Zend ZRAY Extension (only for PHP7.2)';
     public const REQUIREMENTS = [
         Php72::class,
     ];

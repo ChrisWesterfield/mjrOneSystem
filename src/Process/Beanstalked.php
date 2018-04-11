@@ -9,6 +9,7 @@ namespace App\Process;
  */
 class Beanstalked extends ProcessAbstract implements ProcessInterface
 {
+    public const DESCRIPTION = 'simple Queue Server';
     public const REQUIREMENTS = [];
     public const SOFTWARE = [
         'beanstalkd'
@@ -16,6 +17,14 @@ class Beanstalked extends ProcessAbstract implements ProcessInterface
     public const VERSION_TAG = 'beanstalkd';
 
     public const DEFAULT_PORT = 11300;
+
+    /**
+     *
+     */
+    public function restartService():void
+    {
+        $this->execute(self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART);
+    }
 
     /**
      * @return void

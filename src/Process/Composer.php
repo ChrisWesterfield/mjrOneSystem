@@ -12,6 +12,7 @@ class Composer extends ProcessAbstract implements ProcessInterface
     public const REQUIREMENTS = [
     ];
     public const SOFTWARE = [];
+    public const DESCRIPTION = 'Php Composer to manage PHP Project Requirements';
     public const COMMANDS = [
         self::CURL.' https://getcomposer.org/composer.phar | '.self::SUDO.' '.self::TEE.' '.self::COMPOSER,
         self::SUDO.' '.self::CHMOD.' +x '.self::COMPOSER,
