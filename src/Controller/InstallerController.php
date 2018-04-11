@@ -34,6 +34,7 @@ use App\Process\Php72;
 use App\Process\PhpFpmSites;
 use App\Process\PostgreSQL;
 use App\Process\ProcessAbstract;
+use App\Process\ProcessHostsFile;
 use App\Process\ProcessInterface;
 use App\Process\RabbitMQ;
 use App\Process\Redis;
@@ -176,6 +177,7 @@ class InstallerController extends Controller
                 $helper->out('restarting ' . $pName . ' if capable<br>');
                 /** @var ProcessInterface $instance */
                 $instance = new $package();
+                $helper->out('<br><br><a href="' . $obj->generateUrl('software') . '">Return to Installer click here</a>');
                 if ($instance instanceof ProcessAbstract && (!defined("$package::EXCLUDE") || $package::EXCLUDE !== false)) {
                     $instance->setOutput($output);
                     $instance->setConfig(SystemConfig::get());
@@ -183,7 +185,6 @@ class InstallerController extends Controller
                     $instance->setIo(new SymfonyStyle(new Input(), $output));
                     $instance->restartService();
                     $helper->out('<br>done');
-                    $helper->out('<br><br><a href="' . $obj->generateUrl('software') . '">Return to Installer click here</a>');
                 }
             }
         });
@@ -226,6 +227,16 @@ class InstallerController extends Controller
                         $fpm->setIo(new SymfonyStyle(new Input(), $output));
                         $fpm->install();
                         $fpm->configure();
+                        $helper->out('<br>done');
+                        $helper->out('<hr>Writing hostfile');
+                        SystemConfig::get()->writeConfigs();
+                        $host = new ProcessHostsFile();
+                        $host->setOutput($output);
+                        $host->setConfig(SystemConfig::get());
+                        $host->setContainer($this->get('service_container'));
+                        $host->setIo(new SymfonyStyle(new Input(), $output));
+                        $host->install();
+                        $host->configure();
                         $helper->out('<br>done');
                         if (SystemConfig::get()->getFeatures()->contains(Nginx::class)) {
                             $helper->out('<hr>Writing NginX Configs');
@@ -277,6 +288,14 @@ class InstallerController extends Controller
                         $fpm->setContainer($this->get('service_container'));
                         $fpm->setIo(new SymfonyStyle(new Input(), $output));
                         $fpm->uninstall();
+                        $helper->out('<br>done');
+                        $host = new ProcessHostsFile();
+                        $host->setOutput($output);
+                        $host->setConfig(SystemConfig::get());
+                        $host->setContainer($this->get('service_container'));
+                        $host->setIo(new SymfonyStyle(new Input(), $output));
+                        $host->install();
+                        $host->configure();
                         $helper->out('<br>done');
                         if (SystemConfig::get()->getFeatures()->contains(Nginx::class)) {
                             $helper->out('<hr>Writing NginX Configs');

@@ -129,15 +129,8 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
-            if ($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN . $this->getConfig()->getName())) {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
-            }
-            if ($this->getConfig()->getFpm()->containsKey(self::FPM_IDENTITY)) {
-                $fpm = $this->getConfig()->getFpm()->get(self::FPM_IDENTITY);
-                $port = $fpm->getPort();
-                $this->getConfig()->getUsedPorts()->removeElement($port);
-                $this->getConfig()->getFpm()->remove(self::FPM_IDENTITY);
-            }
+            $this->removeWeb(self::SUBDOMAIN);
+            $this->removeFpm(self::FPM_IDENTITY);
             $this->progBarFin();
         }
     }

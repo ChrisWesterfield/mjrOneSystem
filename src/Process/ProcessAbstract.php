@@ -358,6 +358,29 @@ abstract class ProcessAbstract
     }
 
     /**
+     * @param $identity
+     */
+    public function removeFpm($identity):void
+    {
+        if ($this->getConfig()->getFpm()->containsKey($identity)) {
+            $fpm = $this->getConfig()->getFpm()->get($identity);
+            $port = $fpm->getPort();
+            $this->getConfig()->getUsedPorts()->removeElement($port);
+            $this->getConfig()->getFpm()->remove($identity);
+        }
+    }
+
+    /**
+     * @param $subDomain
+     */
+    public function removeWeb($subDomain):void
+    {
+        if ($this->getConfig()->getSites()->containsKey($subDomain . $this->getConfig()->getName())) {
+            $this->getConfig()->getSites()->remove($subDomain . $this->getConfig()->getName());
+        }
+    }
+
+    /**
      *
      */
     public function restartService():void

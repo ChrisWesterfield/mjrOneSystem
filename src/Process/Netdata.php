@@ -86,9 +86,7 @@ class Netdata extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
             $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
-            if ($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN . $this->getConfig()->getName())) {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
-            }
+            $this->removeWeb(self::SUBDOMAIN);
             $this->progBarFin();
         }
     }

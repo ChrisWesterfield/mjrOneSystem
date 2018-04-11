@@ -88,9 +88,7 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
-            if ($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN . $this->getConfig()->getName())) {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
-            }
+            $this->removeWeb(self::SUBDOMAIN);
             $this->progBarFin();
         }
     }

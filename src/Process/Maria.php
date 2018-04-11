@@ -61,7 +61,7 @@ class Maria extends ProcessAbstract implements ProcessInterface
      */
     public function restartService():void
     {
-        $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAMEV.' '.self::SERVICE_RESTART);
+        $this->execute(self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART);
     }
 
     /**

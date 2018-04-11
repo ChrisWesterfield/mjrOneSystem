@@ -215,10 +215,7 @@ EMAIL_DELIVERY_METHOD=":smtp"
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' mkdir '.self::HOME.' -Rf ');
             $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
-            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN.$this->getConfig()->getName()))
-            {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN.$this->getConfig()->getName());
-            }
+            $this->removeWeb(self::SUBDOMAIN);
             $this->progBarFin();
         }
     }

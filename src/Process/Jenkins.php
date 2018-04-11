@@ -79,9 +79,7 @@ class Jenkins extends ProcessAbstract implements ProcessInterface
             unlink(self::INSTALLED_APPS_STORE . self::VERSION_TAG);
             $this->getConfig()->removeFeature(get_class($this));
             $this->getConfig()->getUsedPorts()->remove(self::DEFAULT_PORT);
-            if ($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN . $this->getConfig()->getName())) {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN . $this->getConfig()->getName());
-            }
+            $this->removeWeb(self::SUBDOMAIN);
             $this->progBarFin();
         }
     }

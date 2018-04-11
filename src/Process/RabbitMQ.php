@@ -154,10 +154,7 @@ Pin-Priority: 1000';
             $this->getConfig()->removeFeature(get_class($this));
             $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
             $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT_ADMIN);
-            if($this->getConfig()->getSites()->containsKey(self::SUBDOMAIN .$this->getConfig()->getName()))
-            {
-                $this->getConfig()->getSites()->remove(self::SUBDOMAIN .$this->getConfig()->getName());
-            }
+            $this->removeWeb(self::SUBDOMAIN);
             $this->progBarFin();
         }
     }
