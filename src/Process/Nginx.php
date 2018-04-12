@@ -32,7 +32,7 @@ class Nginx extends ProcessAbstract implements ProcessInterface
         'cd '.self::DIRECTORY.'/nginx-1.13.4/ && '.self::SUDO .' '.self::MAKE.' install',
         self::SUDO.' /bin/rm -Rf /etc/nginx/',
         self::SUDO.' tar -xzf /home/vagrant/base/etc/nginx-etc.tgz  -C /etc',
-        self::SUDO.' /usr/sbin/service '.self::SERVICE_NAME.' restart',
+        self::SERVICE_CMD.' '.self::SERVICE_NAME.' '.self::SERVICE_RESTART,
         self::SUDO.' cp /usr/src/nginx/nginx.service /lib/systemd/system/nginx.service',
         self::SUDO.' '.self::SYSTEMCTL.' daemon-reload',
         self::ENABLE_SERVICE.' nginx.service',

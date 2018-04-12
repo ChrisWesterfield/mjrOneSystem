@@ -19,6 +19,11 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
         'cockpit-bridge',
         'cockpit-ws',
         'cockpit-system',
+        'cockpit-dashboard',
+        'cockpit-doc',
+        'cockpit-networkmanager',
+        'cockpit-storaged',
+        ''
     ];
     public const COMMANDS = [
         self::SUDO . ' add-apt-repository ppa:cockpit-project/cockpit -y',
@@ -26,7 +31,9 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
     ];
     public const VERSION_TAG = 'cockpit';
     public const SUBDOMAIN = 'cockpit.';
-    public const DEFAULT_PORT = 7777;
+    public const DEFAULT_PORT = 9090;
+    public const CONFIG = '[WebService]
+LoginTitle = "Vagrant Cockpit"';
 
     /**
      *
@@ -59,6 +66,7 @@ class Cockpit extends ProcessAbstract implements ProcessInterface
                 $this->progBarAdv(25);
             }
             $this->getConfig()->addFeature(get_class($this));
+            $this->execute('echo "'.self::CONFIG.'" | '.self::SUDO.' '.self::TEE.' /etc/cockpit/cockpit.conf');
             $this->execute(self::SERVICE_CMD . ' cockpit ' . self::SERVICE_START);
             $this->getConfig()->getUsedPorts()->add(self::DEFAULT_PORT);
             $this->progBarFin();

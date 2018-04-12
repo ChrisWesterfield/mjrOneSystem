@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Process\Apache2;
 use App\Process\Beanstalked;
 use App\Process\Cockpit;
+use App\Process\CockroachDb;
 use App\Process\CouchDb;
 use App\Process\DarkStat;
 use App\Process\DatabaseInterface;
@@ -112,6 +113,7 @@ class InstallerController extends Controller
                 Maria::class,
                 DarkStat::class,
                 Docker::class,
+                CockroachDb::class,
             ];
             $blocked = false;
             switch ($className) {
