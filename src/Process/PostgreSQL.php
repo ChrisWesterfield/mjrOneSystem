@@ -18,7 +18,7 @@ class PostgreSQL extends ProcessAbstract implements ProcessInterface
     public const COMMANDS = [
         self::SUDO.' '.self::SED.' -i "s/#listen_addresses = \'localhost\'/listen_addresses = \'*\'/g" /etc/postgresql/9.5/main/postgresql.conf',
         self::SUDO.' echo "host    all             all             10.0.2.2/32               md5" | '.self::SUDO.' '.self::TEE.' -a /etc/postgresql/9.5/main/pg_hba.conf',
-        self::SUDO.' -u postgres psql -c "CREATE ROLE homestead LOGIN UNENCRYPTED PASSWORD \'secret\' SUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;"',
+        self::SUDO.' -u postgres psql -c "CREATE ROLE vagrant LOGIN UNENCRYPTED PASSWORD \'123\' SUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;"',
         self::SUDO.' -u postgres /usr/bin/createdb --echo --owner=vagrant vagrant',
         self::SERVICE_CMD.' '.self::VERSION_TAG.' '.self::SERVICE_RESTART,
     ];
