@@ -89,6 +89,8 @@ class ProcessList implements ArrayAccess, Countable, IteratorAggregate
         foreach($iterator as $item)
         {
             $lines = explode("\n",$item);
+            $processes = [];
+            $root = null;
             foreach($lines as $id=>$line)
             {
                 if($id<1)
@@ -97,12 +99,45 @@ class ProcessList implements ArrayAccess, Countable, IteratorAggregate
                 }
                 $line		=  trim ( $line ) ;
                 $lineArray = preg_split('/\s+/', $line);
-                if(count($lineArray) > 7 && strpos('[', substr($lineArray[7],0,1))===false)
+                if(count($lineArray) > 7)
                 {
-                    $this->processList[] = new Process($lineArray);
+                    $process = new Process($lineArray);
+                    if($process->getProcessId()==='1')
+                    {
+                        $root = $process;
+                    }
+                    else
+                    {
+                        $processes[] = $process;
+                    }
                 }
             }
+            if($root!==null)
+            {
+                $root->setChildren($this->buildTree($root->getProcessId(), $processes));
+                $this->processList[] = $root;
+            }
         }
+    }
+
+    /**
+     * @param $parentId
+     * @param array $processes
+     * @return array
+     */
+    protected function buildTree($parentId, array $processes):array
+    {
+        $return  = [];
+        foreach($processes as $id=>$process)
+        {
+            /** @var Process $process */
+            if($process->getParentProcessId()===$parentId || ($parentId==='1' && $process->getParentProcessId()==='0'))
+            {
+                $process->setChildren($this->buildTree($process->getProcessId(), $processes));
+                $return[$process->getProcessId()] = $process;
+            }
+        }
+        return $return;
     }
 
     /**

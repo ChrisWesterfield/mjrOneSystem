@@ -43,6 +43,11 @@ class Process
     protected $commandLine;
 
     /**
+     * @var array
+     */
+    protected $children;
+
+    /**
      * Process constructor.
      * @param array $command
      */
@@ -68,7 +73,26 @@ class Process
             $this->setStartTime($startTime);
             $this->setCpuTime($command[5]);
             $this->setTty($command[6]);
+            $this->children = [];
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param array $children
+     * @return Process
+     */
+    public function setChildren(array $children): Process
+    {
+        $this->children = $children;
+        return $this;
     }
 
     /**

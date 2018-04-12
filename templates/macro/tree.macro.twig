@@ -1,0 +1,16 @@
+{% set slvl = lvl + 1 %}
+{% for ps in pss %}
+    <tr>
+        <td>|{% if lvl!=0 %}{% for i in range(0,lvl) %}--{% endfor %}{% endif %}</td>
+        <td>{{ ps.command }}</td>
+        <td>{{ ps.processId }}</td>
+        <td>{{ ps.parentProcessId }}</td>
+        <td>{{ ps.startTime }}</td>
+        <td>{{ ps.cpuTime }}</td>
+        <td>{{ ps.user }}</td>
+        <td>{{ ps.commandLine }}</td>
+    </tr>
+    {% if ps.children|length > 0 %}
+        {% include "macro/tree.macro.twig" with { 'pss': ps.children, 'lvl': slvl } %}
+    {% endif %}
+{% endfor %}

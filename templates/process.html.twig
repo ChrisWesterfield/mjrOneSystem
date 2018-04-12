@@ -8,6 +8,7 @@
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
+                    <td></td>
                     <th>Command</th>
                     <th>PID</th>
                     <th>parent PID</th>
@@ -18,17 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for proc in processes %}
-                    <tr>                <td>{{ proc.command }}</td>
-
-                        <td>{{ proc.processId }}</td>
-                        <td>{{ proc.parentProcessId }}</td>
-                        <td>{{ proc.startTime }}</td>
-                        <td>{{ proc.cpuTime }}</td>
-                        <td>{{ proc.user }}</td>
-                        <td>{{ proc.commandLine }}</td>
-                    </tr>
-                {% endfor %}
+                {% include "macro/tree.macro.twig" with { 'pss': processes, 'lvl': 0 } %}
             </tbody>
         </table>
     </div>
