@@ -36,6 +36,7 @@ class Nginx extends ProcessAbstract implements ProcessInterface
         self::SUDO.' cp /usr/src/nginx/nginx.service /lib/systemd/system/nginx.service',
         self::SUDO.' '.self::SYSTEMCTL.' daemon-reload',
         self::ENABLE_SERVICE.' nginx.service',
+        self::SUDO.' '.self::CHMOD.' -x /usr/src/nginx/nginx.service',
     ];
     public const REQUIREMENTS = [];
     public const VERSION_TAG = 'nginx';
