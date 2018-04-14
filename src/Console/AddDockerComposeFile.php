@@ -33,7 +33,7 @@ class AddDockerComposeFile extends ContainerAwareCommand
             ->addArgument('id', InputArgument::REQUIRED, 'Unique Identifier for compose file')
             ->addArgument('file', InputArgument::OPTIONAL, 'File name of file')
             ->addArgument('path', InputArgument::OPTIONAL, 'Path to file')
-            ->addOption('net_natme', null, InputOption::VALUE_REQUIRED, 'name of network device')
+            ->addOption('net_name', null, InputOption::VALUE_REQUIRED, 'name of network device')
             ->addOption('net_mode', null, InputOption::VALUE_REQUIRED, 'network device mode', 'bridge')
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');
     }
@@ -130,6 +130,8 @@ class AddDockerComposeFile extends ContainerAwareCommand
                 'filename'=>$file,
                 'filePath'=>$path,
                 'version'=>2,
+                'networkName'=>$input->getOption('net_name'),
+                'networkDriver'=>$input->getOption('net_mode'),
             ]
         );
         SystemConfig::get()->getDockerCompose()->set($id, $cfg);
