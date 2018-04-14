@@ -23,7 +23,7 @@ class Maria extends ProcessAbstract implements ProcessInterface
         self::SUDO . ' apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8',
         'echo "deb [arch=amd64,i386,ppc64el] http://ftp.heanet.ie/mirrors/mariadb/repo/10.2/ubuntu xenial main" | ' . self::SUDO . ' ' . self::TEE . ' ' . self::APT_FILE,
         self::SUDO . ' ' . self::APT . ' update ',
-        self::SUDO.' /bin/bash /home/vagrant/base/system/bin/mariadb.install.bash',
+        self::SUDO.' /bin/bash /home/vagrant/system/bin/mariadb.install.bash',
         self::SUDO . ' ' . self::SED . '  -i \'/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/\' /etc/mysql/my.cnf',
         'mysql --user="root" --password="123" -e "GRANT ALL ON *.* TO \'root\'@\'0.0.0.0\' IDENTIFIED BY \'123\' WITH GRANT OPTION;"',
         self::SUDO . ' ' . self::SERVICE_CMD . ' mysql ' . self::SERVICE_RESTART,
