@@ -17,6 +17,14 @@ class Fpm extends ConfigAbstract implements ConfigInterface
     public const DYNAMIC = 'dynamic';
     public const STATIC = 'static';
     public const ONDEMAND = 'ondemand';
+    protected const INT_FIELDS = [
+        'maxChildren',
+        'maxSpare',
+        'minSpare',
+        'start',
+        'port',
+        'maxRequests'
+    ];
     /**
      * @var string
      */
@@ -127,7 +135,8 @@ class Fpm extends ConfigAbstract implements ConfigInterface
         {
             foreach($config as $id=>$item)
             {
-                $this->{$id} = $item;
+
+                $this->{$id} = (in_array($id, self::INT_FIELDS)?(int)$item:$item);
             }
         }
         if(!in_array($this->pm,self::PM))
