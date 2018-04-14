@@ -16,7 +16,7 @@ class Netdata extends ProcessAbstract implements ProcessInterface
     public const DESCRIPTION = 'Performance Satistik';
     public const SOFTWARE = [];
     public const COMMANDS = [
-        self::SUDO . ' /bin/bash /home/vagrant/base/system/bin/netdata.install.bash',
+        self::SUDO . ' /bin/bash /home/vagrant/system/bin/netdata.install.bash',
         seLf::SERVICE_CMD . ' netdata ' . self::SERVICE_RESTART,
     ];
     public const VERSION_TAG = 'netdata';
