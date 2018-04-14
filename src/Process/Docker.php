@@ -80,8 +80,6 @@ class Docker extends ProcessAbstract implements ProcessInterface
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::APT.' update ');
             $this->progBarAdv(10);
-            $this->execute(self::SUDO.' '.self::RM.' -f '.self::DOCKER_COMPOSE);
-            $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::RM.' -f '.self::DOCKER_CHTOP);
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::RM.' -f '.self::DOCKER_CTOP);
