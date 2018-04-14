@@ -60,7 +60,7 @@ class AddDockerComposeFile extends ContainerAwareCommand
             {
                 /** @var Compose $dc */
                 $dc = SystemConfig::get()->getDockerCompose()->get($input->getArgument('id'));
-                $file = $dc->getFilePath().$dc->getFilename();
+                $file = $dc->getFilePath().'/'.$dc->getFilename();
                 $path = $dc->getFilePath();
                 if(is_file($file))
                 {
@@ -68,6 +68,11 @@ class AddDockerComposeFile extends ContainerAwareCommand
                     $process->execute('cd '.$path.' && '.DockerCompose::DOCKER_COMPOSE.' stop ');
                     $process->execute('cd '.$path.' && '.DockerCompose::DOCKER_COMPOSE.' kill ');
                     $process->execute(ProcessInterface::RM.' -f '.$file);
+                    if(file_exists($path.'/.env'))
+                    {
+                        $process->execute(ProcessInterface::RM.' -f '.$path.'.env');
+                    }
+                    SystemConfig::get()->getDockerCompose()->remove($input->getArgument('id'));
                     SystemConfig::get()->writeConfigs();
                     $process->getOutput()->writeln('done');
                     return 0;
@@ -82,6 +87,10 @@ class AddDockerComposeFile extends ContainerAwareCommand
         $id = $input->getArgument('id');
         $path = $input->getArgument('path');
         $file = $input->getArgument('file');
+        if(strpos($file, '.yml')===false)
+        {
+            $file .= '.yml';
+        }
         $error = false;
         if(empty($path))
         {

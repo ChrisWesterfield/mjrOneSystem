@@ -150,6 +150,10 @@ class Service extends ConfigAbstract implements ConfigInterface
                 }
             }
         }
+        if(!is_array($this->networks))
+        {
+            $this->networks=[$this->networks];
+        }
     }
 
     /**

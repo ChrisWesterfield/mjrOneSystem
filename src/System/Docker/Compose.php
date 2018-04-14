@@ -59,6 +59,10 @@ class Compose extends ConfigAbstract implements ConfigInterface
                             $item[$k] = new Service($v);
                         }
                     }
+                    if($item===null)
+                    {
+                        $item = [];
+                    }
                     $item = new ArrayCollection($item);
                 }
                 $this->{$id} = $item;

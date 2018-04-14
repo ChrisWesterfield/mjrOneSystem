@@ -133,6 +133,11 @@ class SystemConfig
     protected $usedPorts;
 
     /**
+     * @var bool
+     */
+    protected $locked=false;
+
+    /**
      * SystemConfig constructor.
      */
     protected function __construct()
