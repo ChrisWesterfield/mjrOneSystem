@@ -19,6 +19,7 @@ class Logstash extends ProcessAbstract implements ProcessInterface
         self::CURL.' https://artifacts.elastic.co/downloads/logstash/logstash-6.1.1.deb | '.self::SUDO.' '.self::TEE.' '.self::DEB_FILE,
         self::SUDO.' '.self::DPKG.' -i '.self::DEB_FILE,
         self::SUDO.' '.self::RM.' -f '.self::DEB_FILE,
+        self::SUDO.' /usr/sbin/usermod -a -G adm logstash',
         self::ENABLE_SERVICE.' '.self::VERSION_TAG,
     ];
     public const VERSION_TAG = 'logstash';
