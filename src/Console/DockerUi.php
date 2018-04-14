@@ -1,25 +1,26 @@
 <?php
 declare(strict_types=1);
 namespace App\Console;
-use App\Process\PhpFpmSites as Process;
+use App\Process\Docker as Process;
 use Symfony\Component\Console\Input\InputOption;
+
 /**
- * Class PhpFpmSites
+ * Class Docker
  * @package App\Console
  * @author chris westerfield <chris@mjr.one>
  */
-class PhpFpmSites extends BaseAbstract
+class DockerUi extends BaseAbstract
 {
-    public const NAME = 'PhpFpm Config to Sites';
+    public const NAME = 'DockerUi';
     public const SERVICE_CLASS = Process::class;
     /**
      *
      */
     protected function configure()
     {
-        $this->setName('mjrone:generate:phpfpm')
-            ->setHelp(self::NAME)
-            ->setDescription(self::NAME)
+        $this->setName('mjrone:package:dockerui')
+            ->setHelp('install or uninstall '.self::NAME)
+            ->setDescription('install or uninstall '.self::NAME)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');
     }
 }

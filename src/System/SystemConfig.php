@@ -7,6 +7,7 @@ use App\System\Config\Database;
 use App\System\Config\Folder;
 use App\System\Config\Fpm;
 use App\System\Config\Site;
+use App\System\Docker\Compose;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Yaml\Yaml;
 
@@ -35,6 +36,11 @@ class SystemConfig
         }
         return self::$instance;
     }
+
+    /**
+     * @var ArrayCollection|null|Compose[]
+     */
+    protected $dockerCompose;
 
     /**
      * @var string
@@ -242,6 +248,23 @@ class SystemConfig
                 }
             }
         }
+        $this->dockerCompose = new ArrayCollection();
+        if(array_key_exists('dockerCompose', $config))
+        {
+            foreach($config['dockerCompose'] as $docker)
+            {
+                $instance = new Compose($docker);
+                $this->dockerCompose->set($docker['id'], $instance);
+            }
+        }
+    }
+
+    /**
+     * @return Compose[]|ArrayCollection|null
+     */
+    public function getDockerCompose():?ArrayCollection
+    {
+        return $this->dockerCompose;
     }
 
     /**
@@ -291,11 +314,11 @@ class SystemConfig
             {
                 if($value instanceof ConfigInterface || $value instanceof ArrayCollection)
                 {
-                    $results[] = $value->toArray();
+                    $results[$key] = $value->toArray();
                 }
                 else
                 {
-                    $results[] = $value;
+                    $results[$key] = $value;
                 }
             }
             return $results;
@@ -317,7 +340,7 @@ class SystemConfig
         $vars = get_object_vars($this);
         foreach($vars as $key=>$value)
         {
-            if($key==='requirements')
+            if(in_array($key, ['requirements', 'dockerCompose']))
             {
                 $results = [];
                 if($value instanceof ArrayCollection && $value->count() > 0)
@@ -332,6 +355,7 @@ class SystemConfig
             }
             $config[$key] = $this->getValues($value);
         }
+        ksort($config);
         $yaml = Yaml::dump($config,100);
         file_put_contents(self::CONFIG_FILE, $yaml);
     }

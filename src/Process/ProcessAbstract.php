@@ -128,15 +128,30 @@ abstract class ProcessAbstract
      */
     public function execute($commands)
     {
-        $process = new Process($commands);
-        $process->setTimeout(600);
-        $process->run();
-        $this->printOutput($commands,2);
-        $response = $process->getOutput();
-        $aResponse = explode("\n",$response);
-        foreach($aResponse as $resp)
+        $outputLvl = 3;
+        if(defined('OVERRIDE_OUTPUT') && constant('OVERRIDE_OUTPUT')===true)
         {
-            $this->printOutput('<comment>'.$resp.'</comment>', 3);
+            $outputLvl = 0;
+        }
+        $process = new Process($commands);
+        $process->setTimeout(1800);
+        $this->printOutput($commands,2);
+        $process->run(
+            function ($type, $buffer) use ($outputLvl)
+            {
+                $message = rtrim($buffer, "\n");
+                $this->printOutput($message, $outputLvl);
+            }
+        );
+        $response = $process->getOutput();
+        if(empty($response) && $process->getExitCode()>0)
+        {
+            $response = $process->getErrorOutput();
+            $aResponse = explode("\n",$response);
+            foreach($aResponse as $resp)
+            {
+                $this->printOutput('<error>'.$resp.'</error>', $outputLvl);
+            }
         }
         return $response;
     }

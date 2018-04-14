@@ -6,11 +6,11 @@ use App\Process\Php70;
 use App\Process\Php71;
 use App\Process\Php72;
 use App\Process\ProcessAbstract;
+use App\Process\ProcessHelper;
 use App\Process\ProcessInterface;
 use App\System\SystemConfig;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\LockableTrait;
-use Symfony\Component\Console\Helper\ProcessHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -100,7 +100,7 @@ class Restart extends ContainerAwareCommand
             $output->writeln('<error>Command is locked!</error>');
             return 0;
         }
-        $process = new RestartHelper();
+        $process = new ProcessHelper();
         $process->setIo(new SymfonyStyle($input, $output));
         $process->setContainer($this->getContainer());
         $process->setConfig(SystemConfig::get());

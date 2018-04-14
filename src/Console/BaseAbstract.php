@@ -56,13 +56,13 @@ abstract class BaseAbstract extends ContainerAwareCommand
         $check = $parent.'::ADD_PHP';
         if(defined($check) && $parent::ADD_PHP === true)
         {
-            $output->writeln('<comment>PHP Configs need to be refreshed: mjrone:sites:phpfpm</comment>');
+            $output->writeln('<comment>PHP Configs need to be refreshed: mjrone:generate:phpfpm</comment>');
         }
         $check = $parent.'::ADD_SITE';
         if(defined($check) && $parent::ADD_SITE === true)
         {
             $output->writeln('<comment>Vagrant needs to be reloaded! vagrant reload (outside of this VM)</comment>');
-            $output->writeln('<comment>Webserver Configs need to be refreshed: mjrone:sites:web</comment>');
+            $output->writeln('<comment>Webserver Configs need to be refreshed: mjrone:generate:web</comment>');
         }
     }
 }

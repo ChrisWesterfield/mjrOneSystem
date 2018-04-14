@@ -51,8 +51,50 @@
             </tbody>
         </table>
     </div>
+    <div class="modal" id="spinner">
+        <div class="container row">
+            <div class="col-3">
+                <img src="{{ asset('assets/images/ajax-loader.gif') }}">
+            </div>
+            <div class="col-9">
+                Processing Package<br>
+                Please wait
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block style %}
+#spinner {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    50% 50%
+    no-repeat;
+    overflow: hidden;
+}
+#spinner .container{
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    width: 20%;
+    height: 100px;
+    background-color: white;
+    border-radius: 15px;
+    border: 1px solid black;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+}
 {% endblock %}
 {% block onload %}
+    function startSpinner(){
+        $('#spinner').show();
+    }
     $('.install').click(function(){
         var url = $(this).data('href');
         bootbox.confirm({
@@ -70,6 +112,7 @@
             callback: function (result) {
                 if(result)
                 {
+                    startSpinner();
                     window.location= url;
                 }
             }
@@ -92,6 +135,7 @@
             callback: function (result) {
                 if(result)
                 {
+                    startSpinner();
                     window.location= url;
                 }
             }

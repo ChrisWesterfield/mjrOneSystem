@@ -6,6 +6,7 @@ use App\Process\Sites\Proxy;
 use App\System\Config\Site;
 use App\System\SystemConfig;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class AddSite extends ContainerAwareCommand
 {
+    use LockableTrait;
     /**
      *
      */
@@ -61,6 +63,11 @@ class AddSite extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if(!$this->lock())
+        {
+            $output->writeln('<error>Command is locked!</error>');
+            return 0;
+        }
         if ($input->hasOption('remove') && $input->getOption('remove') && SystemConfig::get()->getSites()->containsKey($input->getArgument('map'))) {
             /** @var Site $site */
             $site = SystemConfig::get()->getSites()->get($input->getArgument('map'));
@@ -112,6 +119,6 @@ class AddSite extends ContainerAwareCommand
         }
         SystemConfig::get()->getSites()->set($site->getMap(), $site);
         SystemConfig::get()->writeConfigs();
-        $output->writeln('<comment>Webserver Configs need to be refreshed: mjrone:sites:web</comment>');
+        $output->writeln('<comment>Webserver Configs need to be refreshed: mjrone:generate:web</comment>');
     }
 }

@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: chris
- * Date: 02.04.18
- * Time: 16:58
- */
-
+declare(strict_types=1);
 namespace App\Console;
 
 
+use App\Process\Apache2;
+use App\Process\DockerCompose;
+use App\Process\Nginx;
 use App\Process\PhpFpmSites;
 use App\Process\ProcessHostsFile;
 use App\Process\ProcessInterface;
@@ -66,14 +63,29 @@ class Install extends ContainerAwareCommand
             }
         }
         $config->writeConfigs();
-        $instance = $this->getInstance(WebSitesNginx::class, $config, $style, $output);
-        $instance->configure();
-        $instance = $this->getInstance(WebSitesApache::class, $config, $style, $output);
-        $instance->configure();
+        if(SystemConfig::get()->getFeatures()->contains(Nginx::class))
+        {
+            $instance = $this->getInstance(WebSitesNginx::class, $config, $style, $output);
+            $instance->configure();
+        }
+        if(SystemConfig::get()->getFeatures()->contains(Apache2::class))
+        {
+            $instance = $this->getInstance(WebSitesApache::class, $config, $style, $output);
+            $instance->configure();
+        }
         $instance = $this->getInstance(PhpFpmSites::class, $config, $style, $output);
         $instance->configure();
         $instance = $this->getInstance(ProcessHostsFile::class, SystemConfig::get(), $style, $output);
         $instance->configure();
+        if(SystemConfig::get()->getFeatures()->contains(DockerCompose::class))
+        {
+            if(SystemConfig::get()->getDockerCompose()->count() > 0)
+            {
+                /** @var DockerCompose $instance */
+                $instance = $this->getInstance(DockerCompose::class, SystemConfig::get(), $style, $output);
+                $instance->configureComposerFiles();
+            }
+        }
     }
 
     protected function getInstance(string $class, SystemConfig $config, SymfonyStyle $style, OutputInterface $output):ProcessInterface

@@ -8,6 +8,7 @@ use App\Process\WebSitesApache;
 use App\Process\WebSitesNginx;
 use App\System\SystemConfig;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,12 +16,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class SiteConfig extends ContainerAwareCommand
 {
+    use LockableTrait;
     /**
      *
      */
     protected function configure()
     {
-        $this->setName('mjrone:sites:web')
+        $this->setName('mjrone:generate:web')
             ->setHelp('generate Website Configs for apache and nginx')
             ->setDescription('generate Website Configs for apache and nginx')
             ->addOption('ignoreApache','a',InputOption::VALUE_NONE)
@@ -34,6 +36,11 @@ class SiteConfig extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if(!$this->lock())
+        {
+            $output->writeln('<error>Command is locked!</error>');
+            return 0;
+        }
         if($input->hasOption('ignoreApache') && $input->getOption('ignoreApache')!==true && SystemConfig::get()->getFeatures()->contains(Apache2::class))
         {
             $output->writeln('configuring apache');

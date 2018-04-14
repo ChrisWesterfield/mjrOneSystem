@@ -22,11 +22,15 @@ class ConfigAbstract
             if($value instanceof ArrayCollection)
             {
                 $res = [];
-                foreach($value as $v)
+                foreach($value as $k=>$v)
                 {
                     if($v instanceof ConfigAbstract)
                     {
-                        $res[] = $v->toArray();
+                        $res[$k] = $v->toArray();
+                    }
+                    else
+                    {
+                        $res[$k] = $v;
                     }
                 }
                 $result[$key] = $res;

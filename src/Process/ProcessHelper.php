@@ -1,19 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace App\Console;
-
-
-use App\Process\ProcessAbstract;
-use App\Process\ProcessInterface;
+namespace App\Process;
 
 /**
  * Class RestartHelper
  * @package App\Console
  * @author chris westerfield <chris@mjr.one>
  */
-class RestartHelper extends ProcessAbstract implements ProcessInterface
+class ProcessHelper extends ProcessAbstract implements ProcessInterface
 {
-
+    public const EXCLUDE = true;
     /**
      * @return void
      */
