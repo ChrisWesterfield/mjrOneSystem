@@ -29,7 +29,7 @@ Pin-Priority: 1001';
         self::SUDO.' '.self::APT.' autoclean ',
         'echo "'.self::PREFERENCES_CONTENT.'" | "'.self::SUDO .' '.self::TEE .' '.self::PREFERENCES_FILE,
         self::SUDO . ' ' . self::APT . ' update ',
-        self::SUDO . ' /bin/bash /home/vagrant/base/system/bin/mysql.install.bash',
+        self::SUDO . ' /bin/bash /home/vagrant/system/bin/mysql.install.bash',
         self::SUDO . ' ' . self::SED . '  -i \'/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/\' /etc/mysql/my.cnf',
         'mysql --user="root" --password="123" -e "GRANT ALL ON *.* TO root@\'0.0.0.0\' IDENTIFIED BY \'123\' WITH GRANT OPTION;"',
         self::SUDO . ' ' . self::SERVICE_CMD . ' mysql ' . self::SERVICE_RESTART,
