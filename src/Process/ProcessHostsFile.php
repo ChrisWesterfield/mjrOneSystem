@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace App\Process;
 use App\System\Config\Site;
+use App\System\SystemConfig;
 
 /**
  * Class ProcessHostsFile
@@ -11,7 +12,7 @@ use App\System\Config\Site;
 class ProcessHostsFile extends ProcessAbstract implements ProcessInterface
 {
     public const EXCLUDE =  true;
-    public const HOSTS_FILE = "127.0.0.1	localhost\n127.0.1.1	schulung.test	schulung\n# The following lines are desirable for IPv6 capable hosts\n::1     localhost ip6-localhost ip6-loopback\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\n";
+    public const HOSTS_FILE = "127.0.0.1	localhost\n127.0.1.1	%s	%s\n# The following lines are desirable for IPv6 capable hosts\n::1     localhost ip6-localhost ip6-loopback\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\n";
     public const FILENAME = '/etc/hosts';
     public const VERSION_TAG = 'hostFileUpdator';
 
@@ -33,7 +34,8 @@ class ProcessHostsFile extends ProcessAbstract implements ProcessInterface
         if($this->getConfig()->getSites()->count() > 0)
         {
             $ip = $this->getConfig()->getIp();
-            $template = self::HOSTS_FILE;
+            $simple = explode('.', SystemConfig::get()->getName());
+            $template = sprintf(implode('.', $simple), $simple[0]);
             foreach($this->getConfig()->getSites() as $site)
             {
                 /** @var Site $site */
