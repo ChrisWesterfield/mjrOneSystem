@@ -23,7 +23,7 @@ if (!isset($_SERVER['APP_ENV'])) {
 }
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(['--env', '-e'], $_SERVER['APP_ENV'] ?? 'dev', true);
+$env = $input->getParameterOption(['--env', '-e'], $_SERVER['APP_ENV'] ?? 'prod', true);
 $debug = (bool) ($_SERVER['APP_DEBUG'] ?? ('prod' !== $env)) && !$input->hasParameterOption('--no-debug', true);
 
 if ($debug) {
@@ -36,4 +36,11 @@ if ($debug) {
 
 $kernel = new Kernel($env, $debug);
 $application = new Application($kernel);
-$application->run($input);
+$application->setName('MjrONE System CLI');
+$application->setVersion('5.1');
+try {
+    $application->run($input);
+} catch (Exception $e) {
+    echo 'Could not start system console. Reason: '.$e->getMessage().' (File '.$e->getFile().': '.$e->getLine().')'."\n";
+    echo 'CallStack: '."\n".var_export($e->getTrace(), true);
+}

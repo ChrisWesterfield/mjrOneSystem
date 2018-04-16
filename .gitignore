@@ -2,3 +2,6 @@
 /.env
 ###< symfony/framework-bundle ###
 .DS_Store
+/var/cache/dev
+/var/cache/prod
+/var/log/*.log

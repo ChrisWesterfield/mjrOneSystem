@@ -41,6 +41,7 @@ class SiteConfig extends ContainerAwareCommand
             $output->writeln('<error>Command is locked!</error>');
             return 0;
         }
+        /**
         if($input->hasOption('ignoreApache') && $input->getOption('ignoreApache')!==true && SystemConfig::get()->getFeatures()->contains(Apache2::class))
         {
             $output->writeln('configuring apache');
@@ -64,7 +65,7 @@ class SiteConfig extends ContainerAwareCommand
             $inst->install();
             $inst->configure();
             $output->writeln('configuring nginx done');
-        }
+        }**/
         $output->writeln('configuring hostsfile');
         $inst = new ProcessHostsFile();
         $inst->setIo(new SymfonyStyle($input, $output));
