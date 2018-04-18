@@ -98,7 +98,7 @@ class DockerPortainer extends ProcessAbstract implements ProcessInterface
      */
     public function start()
     {
-        $command = self::SUDO . ' ' . Docker::DOCKER_CMD . ' run -d -p ' . self::DEFAULT_PORT . ':9000 --name portainer -v "' . Docker::DOCKER_SOCKET . ':' . Docker::DOCKER_SOCKET . '" -v"' . self::APP_DIR . ':/data"  -e VIRTUAL_HOST=' . self::SUBDOMAIN . $this->getConfig()->getName() . ' portainer/portainer --no-auth --no-analytics --sync-interval 30s';
+        $command = self::SUDO . ' ' . Docker::DOCKER_CMD . ' run -d -p ' . self::DEFAULT_PORT . ':9000 --name portainer -v "' . Docker::DOCKER_SOCKET . ':' . Docker::DOCKER_SOCKET . '" -v"' . self::APP_DIR . ':/data" portainer/portainer --no-auth --no-analytics --sync-interval 30s';
         $this->getOutput()->writeln('<info>Starting Docker UI Portainer</info>');
         $this->execute($command);
         $this->getOutput()->writeln('done');
