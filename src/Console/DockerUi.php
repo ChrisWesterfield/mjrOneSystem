@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Console;
-use App\Process\Docker as Process;
+use App\Process\DockerPortainer as Process;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
