@@ -89,6 +89,18 @@ class AddSite extends ContainerAwareCommand
             $options['remove'], $options['no-interaction'],
             $options['env'], $options['no-debug']);
         $options['map'] = $input->getArgument('map');
+        if(array_key_exists('https', $options) && !empty($options['https']))
+        {
+            $options['https'] = (int)$options['https'];
+        }
+        if(array_key_exists('http', $options) && !empty($options['http']))
+        {
+            $options['http'] = (int)$options['http'];
+        }
+        if(array_key_exists('clientMaxBodySize', $options) && !empty($options['clientMaxBodySize']))
+        {
+            $options['clientMaxBodySize'] = (int)$options['clientMaxBodySize'];
+        }
         $site = new Site($options);
         if(SystemConfig::get()->getSites()->containsKey($site->getMap()))
         {

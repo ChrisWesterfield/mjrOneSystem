@@ -9,7 +9,7 @@ server {
     {% include "configuration/nginx/bits/ssl.conf.twig" %}
 
     server_name {{ hostname }};
-    root {{ docRoot }};
+    root \"{{ docRoot }}\";
 
     client_max_body_size {% if maxPost is defined  %}{{ maxPost }}M{% else %}4G{% endif %};
 
@@ -22,11 +22,11 @@ server {
 
     location / {
 
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Host \$http_host;
         proxy_redirect off;
 
-        if (!-f $request_filename) {
+        if (!-f \$request_filename) {
             proxy_pass http://unicorn_server;
             break;
         }
