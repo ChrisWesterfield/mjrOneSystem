@@ -33,9 +33,9 @@ Pin-Priority: 1001';
         self::SUDO . ' ' . self::APT . ' update ',
         self::SUDO . ' /bin/bash /home/vagrant/system/bin/mysql.install.bash',
         self::SUDO . ' ' . self::SED . '  -i \'/^bind-address/s/bind-address.*=.*/bind-address = 0.0.0.0/\' /etc/mysql/my.cnf',
-        'mysql --user="root" --password="123" -e "GRANT ALL ON *.* TO root@\'0.0.0.0\' IDENTIFIED BY \'123\' WITH GRANT OPTION;"',
-        self::SUDO . ' ' . self::SERVICE_CMD . ' mysql ' . self::SERVICE_RESTART,
-        'mysql --user="root" --password="123" -e "CREATE USER \'application\'@\'%\' IDENTIFIED BY \'123\';"',
+        'echo "default_authentication_plugin= mysql_native_password" | '.self::TEE.' /etc/mysql/mysql.conf.d/mysqld.cnf',
+        'mysql --user="root" --password="123" -e "CREATE USER \'root\'@\'0.0.0.0\' IDENTIFIED BY \'123\';"',
+        'mysql --user="root" --password="123" -e "GRANT ALL PRIVILEGES ON *.* to \'root\'@\'0.0.0.0\'  WITH GRANT OPTION;"',
         'mysql --user="root" --password="123" -e "FLUSH PRIVILEGES;"',
         self::SUDO . ' ' . self::SERVICE_CMD . ' mysql ' . self::SERVICE_RESTART,
     ];

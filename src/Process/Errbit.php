@@ -227,6 +227,7 @@ EMAIL_DELIVERY_METHOD=":smtp"
     {
         $this->addSite([
             'map'=> self::SUBDOMAIN .$this->getConfig()->getName(),
+            'to'=>self::HOME,
             'type'=>'Errbit',
             'listen'=>'127.0.0.1:'.self::DEFAULT_PORT,
             'category'=>Site::CATEGORY_ADMIN,

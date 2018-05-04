@@ -137,6 +137,18 @@ class Site extends ConfigAbstract implements ConfigInterface
                 $this->{$id} = $item;
             }
         }
+        if(!empty($this->https) && !is_int($this->https))
+        {
+            $this->https = (int)$this->https;
+        }
+        if(!empty($this->http) && !is_int($this->http))
+        {
+            $this->http = (int)$this->http;
+        }
+        if(!empty($this->clientMaxBodySize) && !is_int($this->clientMaxBodySize))
+        {
+            $this->clientMaxBodySize = (int)$this->clientMaxBodySize;
+        }
     }
 
     /**
@@ -317,7 +329,7 @@ class Site extends ConfigAbstract implements ConfigInterface
      */
     public function setClientMaxBodySize(?int $clientMaxBodySize): Site
     {
-        $this->clientMaxBodySize = $clientMaxBodySize;
+        $this->clientMaxBodySize = (int)$clientMaxBodySize;
         return $this;
     }
 
@@ -390,7 +402,7 @@ class Site extends ConfigAbstract implements ConfigInterface
      */
     public function setHttp(?int $http): Site
     {
-        $this->http = $http;
+        $this->http = (int)$http;
         return $this;
     }
 
@@ -408,7 +420,7 @@ class Site extends ConfigAbstract implements ConfigInterface
      */
     public function setHttps(?int $https): Site
     {
-        $this->https = $https;
+        $this->https = (int)$https;
         return $this;
     }
 
