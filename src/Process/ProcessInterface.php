@@ -64,6 +64,7 @@ interface ProcessInterface
     public const UPD_ALT = '/usr/sbin/update-alternatives';
     public const VAGRANT_SYSTEM = self::VAGRANT_USER_DIR.'/system';
     public const FIND = '/usr/bin/find';
+    public const CP = '/bin/cp';
 
     /**
      * @param SystemConfig $config

@@ -123,11 +123,6 @@ class SystemConfig
     protected $blackFire;
 
     /**
-     * @var int
-     */
-    protected $slaveCount=0;
-
-    /**
      * @var ArrayCollection
      */
     protected $usedPorts;
@@ -136,6 +131,16 @@ class SystemConfig
      * @var bool
      */
     protected $locked=false;
+
+    /**
+     * @var int
+     */
+    protected $masterCount=1;
+
+    /**
+     * @var int
+     */
+    protected $slaveCount=0;
 
     /**
      * SystemConfig constructor.
@@ -174,6 +179,7 @@ class SystemConfig
             $this->usedPorts = new ArrayCollection([]);
         }
         $this->slaveCount = (array_key_exists('slaveCount',$config)?$config['slaveCount']:0);
+        $this->masterCount = (array_key_exists('masterCount',$config)?$config['masterCount']:1);
         if(array_key_exists('blackfire', $config))
         {
             $this->blackFire = new Blackfire($config['blackfire']);
@@ -262,6 +268,23 @@ class SystemConfig
                 $this->dockerCompose->set($docker['id'], $instance);
             }
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getMasterCount()
+    : int
+    {
+        return $this->masterCount;
+    }
+
+    /**
+     * @param int $masterCount
+     */
+    public function setMasterCount(int $masterCount)
+    : void {
+        $this->masterCount = $masterCount;
     }
 
     /**

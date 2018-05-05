@@ -161,6 +161,7 @@ class PhpMyAdmin extends ProcessAbstract implements ProcessInterface
                 'listen' => '127.0.0.1:%%%PORT%%%',
                 'pm' => Fpm::ONDEMAND,
                 'maxChildren' => 2,
+                'xdebug'=>false,
             ]
         );
     }
