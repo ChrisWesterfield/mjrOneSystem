@@ -212,16 +212,16 @@ $cfg[\'Servers\'][$i][\'export_templates\'] = \'pma__export_templates\';';
             }
             $cmd = new Process(sprintf(self::CMD_POSITION,self::PORT_MASTER));
             $cmd->enableOutput();
-            $position = '';
-            $file = '';
+            $mPosition = '';
+            $mFile = '';
             $cmd->run();
-            $position = str_replace("\n","",$cmd->getOutput());
+            $mPosition = str_replace("\n","",$cmd->getOutput());
             $this->progBarAdv(5);
             unset($cmd);
             $cmd = new Process(sprintf(self::CMD_FILE,self::PORT_MASTER));
             $cmd->enableOutput();
             $cmd->run();
-            $file = str_replace("\n","",$cmd->getOutput());
+            $mFile = str_replace("\n","",$cmd->getOutput());
             unset($cmd);
             $this->progBarAdv(5);
             $this->touch(self::INSTALLED_APPS_STORE, self::VERSION_TAG);
@@ -285,7 +285,7 @@ $cfg[\'Servers\'][$i][\'export_templates\'] = \'pma__export_templates\';';
                     $this->progBarAdv(5);
                     unset($cmd);
                 }
-                $cmd = sprintf(self::SLAVE_ON,$p, self::PORT_MASTER, $file, $position);
+                $cmd = sprintf(self::SLAVE_ON,$p, self::PORT_MASTER, $mFile, $mPosition);
                 $this->execute($cmd);
                 unset($cmd);
                 $this->progBarAdv(5);
@@ -332,7 +332,7 @@ $cfg[\'Servers\'][$i][\'export_templates\'] = \'pma__export_templates\';';
     public function uninstall()
     : void
     {
-        $this->progBarInit(55);
+        $this->progBarInit(75);
         for($i=1; $i<=$this->getConfig()->getSlaveCount(); $i++)
         {
             $file = sprintf(self::FILE_SYSTEMD, $i);
@@ -343,6 +343,8 @@ $cfg[\'Servers\'][$i][\'export_templates\'] = \'pma__export_templates\';';
             $this->execute(self::SUDO.' '.self::RM.' -Rf '.sprintf(self::LOG_DIR,$i));
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::RM.' -Rf '.self::DIR_MYSQL_LIB.'/'.$i);
+            $this->progBarAdv(5);
+            $this->execute(self::SUDO.' '.self::RM.' -Rf '.self::SYSTEMD_DIR.'/mysql'.$i.'.service');
             $this->progBarAdv(5);
             $p = 3306 + $i;
         }

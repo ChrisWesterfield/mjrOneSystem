@@ -3,12 +3,15 @@ declare(strict_types=1);
 namespace App\Controller;
 
 
+use App\Process\ProcessInterface;
 use App\Services\SystemConfig;
 use App\System\Config\Site;
+use App\System\SystemConfig as SysConfig;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class StartController
@@ -28,6 +31,46 @@ class StartController extends Controller
             'index.html.twig',
             [
 
+            ]
+        );
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route("/user", name="users")
+     */
+    public function userAction(Request $request):Response
+    {
+        $sjson = file_get_contents(ProcessInterface::VAGRANT_USER_DIR.'/user.json');
+        $json = Yaml::parse($sjson);
+        $json['rabbitmq Admin'] = [
+            'website'=> 'https://rmqa.'.SysConfig::get()->getName(),
+            'username'=>'guest',
+            'password'=>'guest',
+        ];
+        $json['errbit']['website'] = 'https://errbit'.SysConfig::get()->getName();
+        $dbs = SysConfig::get()->getDatabases();
+        $dbConfig = [];
+        foreach($dbs as $db)
+        {
+            /** @var \App\System\Config\Database $db */
+            $row = [
+                'db'=>$db->getName(),
+            ];
+            foreach($db->getUserList() as $ul)
+            {
+                /** @var \App\System\Config\DbUser $ul */
+                $row['user'] = $ul->getUsername();
+                $row['pass'] = $ul->getPassword();
+                $row['perm'] = $ul->getReadOnly();
+                $dbConfig[] = $row;
+            }
+        }
+        return $this->render(
+            'user.html.twig',
+            [
+                'json'=>$json,
+                'db'=>$dbConfig,
             ]
         );
     }
