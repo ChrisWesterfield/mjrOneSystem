@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Console;
+use App\Process\MasterSlaveSetup;
 use App\Process\MySQL as Process;
 use App\Process\Maria;
 use App\Process\MySQL56;
@@ -34,6 +35,7 @@ class MySQL extends ContainerAwareCommand
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
             ->addOption('mysql','m', InputOption::VALUE_REQUIRED,'set Version to Install (6 for 5.6, 7 for 5.7 or 8 for 8.x (experimental!))',7)
+            ->addOption('slaves', 'z', InputOption::VALUE_REQUIRED, 'Number of slave servers', 0)
             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');
     }
     /**
@@ -136,7 +138,19 @@ class MySQL extends ContainerAwareCommand
         $output->writeln('<info>Installing MySQL '.$version.'</info>');
         $inst->install();
         $inst->configure();
-        $output->writeln('<info>Installation completed</info>');
         $inst->getConfig()->writeConfigs();
+        if($input->hasOption('slaves') && $input->getOption('slaves') && SystemConfig::get()->getMasterCount()===1)
+        {
+            SystemConfig::get()->setSlaveCount((int)$input->getOption('slaves'));
+            $output->writeln('<info>Initializing Master Slave Setup</info>');
+            $inst = new MasterSlaveSetup();
+            $inst->setConfig(SystemConfig::get());
+            $inst->setOutput($output);
+            $inst->setContainer($this->getContainer());
+            $inst->setIo(new SymfonyStyle($input, $output));
+            $inst->install();
+            $inst->configure();
+        }
+        $output->writeln('<info>Installation completed</info>');
     }
 }

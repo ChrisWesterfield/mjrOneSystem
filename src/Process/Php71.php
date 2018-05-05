@@ -200,6 +200,7 @@ class Php71 extends ProcessAbstract implements ProcessInterface
                 'pm' => Fpm::ONDEMAND,
                 'maxChildren' => 2,
                 'version' => self::VERSION,
+                'xdebug'=>false,
             ]
         );
     }

@@ -185,9 +185,6 @@ class Php72 extends ProcessAbstract implements ProcessInterface
      */
     public function configure(): void
     {
-        //@todo MultiMaster + MultiSlave Support
-        $config = '
-        ';
         $this->addSite(
             [
                 'map' => self::SUBDOMAIN . $this->getConfig()->getName(),
@@ -206,6 +203,7 @@ class Php72 extends ProcessAbstract implements ProcessInterface
                 'pm' => Fpm::ONDEMAND,
                 'maxChildren' => 2,
                 'version' => self::VERSION,
+                'xdebug'=>false,
             ]
 
         );
@@ -227,6 +225,7 @@ class Php72 extends ProcessAbstract implements ProcessInterface
                 'pm' => Fpm::ONDEMAND,
                 'maxChildren' => 2,
                 'version' => self::VERSION,
+                'xdebug'=>false,
             ]
 
         );

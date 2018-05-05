@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Process;
 
+use App\System\SystemConfig;
+
 /**
  * Class MySQL57
  * @package App\Process
@@ -77,6 +79,15 @@ Pin-Priority: 1001';
     public function uninstall(): void
     {
         if (file_exists(self::INSTALLED_APPS_STORE . self::VERSION_TAG)) {
+            if($this->getConfig()->getMasterCount()===1 && $this->getConfig()->getSlaveCount() > 0)
+            {
+                $inst = new MasterSlaveSetup();
+                $inst->setConfig($this->getConfig());
+                $inst->setContainer($this->getContainer());
+                $inst->setIo($this->getIo());
+                $inst->setOutput($this->getOutput());
+                $inst->uninstall();
+            }
             $this->progBarInit(125);
             $this->checkUninstall(get_class($this));
             $this->progBarAdv(5);
@@ -107,6 +118,10 @@ Pin-Priority: 1001';
             $this->execute(self::SUDO.' '.self::APT.' update');
             $this->progBarAdv(5);
             $this->execute(self::SUDO.' '.self::RM.' -Rf /etc/mysql');
+            $this->progBarAdv(5);
+            $this->execute(self::SUDO.' apt-get install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" mysql-common -y');
+            $this->progBarAdv(5);
+            $this->execute(self::SUDO.' apt-get purge mysql-common -y');
             $this->progBarAdv(5);
             $this->getConfig()->removeFeature(get_class($this));
             $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
