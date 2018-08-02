@@ -1,25 +1,28 @@
 <?php
 declare(strict_types=1);
 namespace App\Console;
-use App\Process\PhpMyAdmin as Process;
+use App\Process\RedisAdmin as Process;
 use Symfony\Component\Console\Input\InputOption;
+
 /**
- * Class PhpMyAdmin
+ * Class Ant
  * @package App\Console
  * @author chris westerfield <chris@mjr.one>
  */
-class PhpMyAdmin extends BaseAbstract
+class RedisAdmin extends BaseAbstract
 {
-    public const NAME = 'PhpMyAdmin';
+    public const NAME = 'RedisAdmin';
     public const SERVICE_CLASS = Process::class;
+    public const ADD_SITE = true;
+    public const ADD_PHP = true;
     /**
      *
      */
     protected function configure()
     {
-        $this->setName('mjrone:package:pma')
+        $this->setName('mjrone:package:rda')
             ->setHelp('install or uninstall '.self::NAME)
             ->setDescription('install or uninstall '.self::NAME)
-            ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');
+             ->addOption('remove','r', InputOption::VALUE_NONE, 'remove package completley');
     }
 }

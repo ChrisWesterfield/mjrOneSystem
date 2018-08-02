@@ -4,6 +4,10 @@ namespace App\Console;
 
 
 use App\Process\Apache2;
+use App\Process\Database\MySQL;
+use App\Process\Database\CouchDb;
+use App\Process\Database\Mongo;
+use App\Process\Database\PostgreSQL;
 use App\Process\DockerCompose;
 use App\Process\Nginx;
 use App\Process\PhpFpmSites;
@@ -11,6 +15,7 @@ use App\Process\ProcessHostsFile;
 use App\Process\ProcessInterface;
 use App\Process\WebSitesApache;
 use App\Process\WebSitesNginx;
+use App\System\Config\Database;
 use App\System\SystemConfig;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\LockableTrait;
@@ -86,6 +91,7 @@ class Install extends ContainerAwareCommand
                 $instance->configureComposerFiles();
             }
         }
+        $this->processDatabases($input, $output);
     }
 
     protected function getInstance(string $class, SystemConfig $config, SymfonyStyle $style, OutputInterface $output):ProcessInterface
@@ -101,4 +107,52 @@ class Install extends ContainerAwareCommand
         return $instance;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function processDatabases(InputInterface $input, OutputInterface $output)
+    {
+        if (SystemConfig::get()->getDatabases()->count() > 0) {
+            $databases = SystemConfig::get()->getDatabases();
+            foreach ($databases as $id => $database) {
+                /** @var Database $database */
+                $type = $database->getType();
+                switch (strtolower($type))
+                {
+                    case 'mysql':
+                    case 'maria':
+                    case 'mariadb':
+                        $instance = new MySQL();
+                        break;
+                    case 'pgsql':
+                    case 'postgresql':
+                    case 'psql':
+                        $instance = new PostgreSQL();
+                        break;
+                    case 'mongo':
+                    case 'mongodb':
+                    case 'mong':
+                        $instance = new Mongo();
+                        break;
+                    case 'couch':
+                    case 'couchdb':
+                        $instance = new CouchDb();
+                        break;
+                    default:
+                        $output->writeln('<error>only mysql, pgsql, mongo, couchdb are supported!<</error>');
+                        return 0;
+                        break;
+                }
+                /** @var ProcessInterface|MySQL $instance */
+                $instance->setOutput($output);
+                $instance->setConfig(SystemConfig::get());
+                $instance->setContainer($this->getContainer());
+                $instance->setIo(new SymfonyStyle($input, $output));
+                $instance->db($database,true,false);
+            }
+        }
+        return 0;
+    }
 }
