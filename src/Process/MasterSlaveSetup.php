@@ -48,7 +48,7 @@ After=network.target
 [Service]
 Type=simple
 PermissionsStartOnly=true
-ExecStart=/usr/sbin/mysqld  --basedir=/usr --datadir=/var/lib/mysql/%s --plugin-dir=/usr/lib/mysql/plugin --log-error=/var/log/mysql/error.log --pid-file=/tmp/mysqld%s.pid  --socket=/tmp/mysql%s.sock --port=%s --server-id=%s --log-bin=/var/log/mysql/%s/mysql-bin.log --relay-log=/var/log/mysql/%s/mysql-relay.log 
+ExecStart=/usr/sbin/mysqld  --basedir=/usr --datadir=/var/lib/mysql/%s --plugin-dir=/usr/lib/mysql/plugin --log-error=/var/log/mysql/error.log --pid-file=/tmp/mysqld%s.pid  --socket=/tmp/mysql%s.sock --port=%s --server-id=%s --log-bin=/var/log/mysql/%s/mysql-bin.log --relay-log=/var/log/mysql/%s/mysql-relay.log  --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 TimeoutSec=300
 PrivateTmp=true
 User=mysql

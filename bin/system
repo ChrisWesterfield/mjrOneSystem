@@ -37,7 +37,7 @@ if ($debug) {
 $kernel = new Kernel($env, $debug);
 $application = new Application($kernel);
 $application->setName('MjrONE System CLI');
-$application->setVersion('5.1');
+$application->setVersion('5.3');
 try {
     $application->run($input);
 } catch (Exception $e) {
