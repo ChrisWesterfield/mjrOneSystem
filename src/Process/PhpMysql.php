@@ -59,6 +59,12 @@ class PhpMysql extends ProcessAbstract implements ProcessInterface
                 $this->execute(self::SERVICE_CMD . ' ' . Php72::SERVICE_NAME . ' ' . self::SERVICE_RESTART);
                 $this->progBarAdv(5);
             }
+            if ($this->getConfig()->getFeatures()->contains(Php73::class)) {
+                $this->execute(self::SUDO . ' ' . self::APT . ' install -y php' . Php73::VERSION . '-mysql');
+                $this->progBarAdv(5);
+                $this->execute(self::SERVICE_CMD . ' ' . Php73::SERVICE_NAME . ' ' . self::SERVICE_RESTART);
+                $this->progBarAdv(5);
+            }
             $this->getConfig()->addFeature(get_class($this));
             $this->progBarFin();
         }
@@ -95,10 +101,10 @@ class PhpMysql extends ProcessAbstract implements ProcessInterface
                 $this->execute(self::SERVICE_CMD . ' ' . Php71::SERVICE_NAME . ' ' . self::SERVICE_RESTART);
                 $this->progBarAdv(5);
             }
-            if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
-                $this->execute(self::SUDO . ' ' . self::APT . ' purge -y php' . Php72::VERSION . '-mysql');
+            if ($this->getConfig()->getFeatures()->contains(Php73::class)) {
+                $this->execute(self::SUDO . ' ' . self::APT . ' purge -y php' . Php73::VERSION . '-mysql');
                 $this->progBarAdv(5);
-                $this->execute(self::SERVICE_CMD . ' ' . Php72::SERVICE_NAME . ' ' . self::SERVICE_RESTART);
+                $this->execute(self::SERVICE_CMD . ' ' . Php73::SERVICE_NAME . ' ' . self::SERVICE_RESTART);
                 $this->progBarAdv(5);
             }
             $this->getConfig()->getUsedPorts()->removeElement(self::DEFAULT_PORT);
