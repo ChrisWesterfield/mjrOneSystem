@@ -207,27 +207,5 @@ class Php73 extends ProcessAbstract implements ProcessInterface
             ]
 
         );
-        $this->addSite(
-            [
-                'map' => self::SYSTEM_SUBDOMAIN . $this->getConfig()->getName(),
-                'type' => 'Symfony4',
-                'to' => self::VAGRANT_SYSTEM . '/public/',
-                'fpm' => true,
-                'zRay' => false,
-                'category' => Site::CATEGORY_INFO,
-                'description'=>'Startpage',
-            ],
-            [
-                'name' => self::SYSTEM_FPM_IDENTITY,
-                'user' => 'vagrant',
-                'group' => 'vagrant',
-                'listen' => '127.0.0.1:%%%PORT%%%',
-                'pm' => Fpm::ONDEMAND,
-                'maxChildren' => 2,
-                'version' => self::VERSION,
-                'xdebug'=>false,
-            ]
-
-        );
     }
 }
