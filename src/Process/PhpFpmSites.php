@@ -42,6 +42,11 @@ class PhpFpmSites extends ProcessAbstract implements ProcessInterface
     {
         $this->progBarInit(((5 * 4) + ($this->getConfig()->getFpm()->count() * 5)));
         //remove existing sites
+        if ($this->getConfig()->getFeatures()->contains(Php73::class)) {
+            $this->execute(sprintf(self::DELETE, Php73::VERSION));
+            $this->progBarAdv(5);
+        }
+        //remove existing sites
         if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
             $this->execute(sprintf(self::DELETE, Php72::VERSION));
             $this->progBarAdv(5);
@@ -111,6 +116,10 @@ class PhpFpmSites extends ProcessAbstract implements ProcessInterface
         }
         if(!defined('POST_PONE_RELOAD') || POST_PONE_RELOAD!==true)
         {
+            if ($this->getConfig()->getFeatures()->contains(Php73::class)) {
+                $this->execute(self::SERVICE_CMD.' '.Php73::SERVICE_NAME.' '.self::SERVICE_RESTART);
+                $this->progBarAdv(5);
+            }
             if ($this->getConfig()->getFeatures()->contains(Php72::class)) {
                 $this->execute(self::SERVICE_CMD.' '.Php72::SERVICE_NAME.' '.self::SERVICE_RESTART);
                 $this->progBarAdv(5);
